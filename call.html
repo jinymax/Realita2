@@ -6,42 +6,12 @@
     <meta name="theme-color" content="#050607" />
     <meta name="description" content="Realita AI 数字人视频对话" />
     <title>Realita — 视频对话</title>
-    <link rel="stylesheet" href="./call.css?v=33" />
+    <link rel="stylesheet" href="./call.css?v=7" />
   </head>
   <body>
     <main class="call-stage" id="callStage">
-      <div class="remote-media-background" aria-hidden="true">
-        <video class="remote-media-backdrop" id="remoteVideoBackdrop" muted autoplay loop playsinline preload="auto" aria-hidden="true"></video>
-        <img class="remote-media-backdrop is-hidden" id="remoteImageBackdrop" alt="" aria-hidden="true" />
-        <div class="remote-media-backdrop-shade" aria-hidden="true"></div>
-      </div>
-      <div class="remote-media-frame" aria-label="远端主播画面">
-        <video class="remote-media" id="remoteVideo" autoplay loop playsinline preload="auto"></video>
-        <img class="remote-media is-hidden" id="remoteImage" alt="当前虚拟主播" />
-        <section class="call-controls" aria-label="视频通话控制">
-          <span class="call-timer" id="callTimer">00:00</span>
-          <form class="chat-form" id="chatForm">
-            <input id="chatInput" type="text" maxlength="300" autocomplete="off" placeholder="输入你想说的话…" />
-            <button type="submit" aria-label="发送消息">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"></path><path d="m6.5 10.5 5.5-5.5 5.5 5.5"></path></svg>
-            </button>
-          </form>
-          <div class="control-row">
-            <button class="round-control" id="keyboardControl" type="button" aria-label="打开文字对话" aria-pressed="false">
-              <span><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"></path></svg></span>
-            </button>
-            <button class="round-control" id="micControl" type="button" aria-label="打开麦克风" aria-pressed="false">
-              <span><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><path d="M12 19v3M8 22h8"></path></svg></span>
-            </button>
-            <button class="round-control" id="cameraControl" type="button" aria-label="打开摄像头" aria-pressed="false">
-              <span><svg class="camera-on-icon" viewBox="0 0 24 24"><path d="M14 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"></path><path d="m16 10 5.2-3v10L16 14"></path></svg><svg class="camera-off-icon" viewBox="0 0 24 24"><path d="M10.7 6H14a2 2 0 0 1 2 2v2.5L21.2 7.5v8.6"></path><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 0 2-2V8a2 2 0 0 0 2-2h2"></path><path d="m2 2 20 20"></path></svg></span>
-            </button>
-            <button class="round-control hangup-control" id="hangupControl" type="button" aria-label="挂断">
-              <span><svg class="hangup-icon" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M934.528 554.325333c-14.506667 54.229333-51.925333 69.674667-113.493333 60.970667-72.362667-10.24-133.589333-29.653333-129.109334-92.16 0 0 5.717333-67.285333-170.325333-72.405333-205.44-5.290667-196.693333 74.410667-196.693333 74.410666-0.085333 73.386667-50.773333 77.44-122.965334 88.192-72.234667 10.752-116.394667-7.168-125.269333-87.381333-17.152-154.624 265.386667-194.944 389.333333-196.48 0 0 189.013333-2.858667 279.594667 23.765333l48.768 13.866667c67.968 21.973333 128.981333 61.952 143.146667 118.826667 0 0 8.362667 25.898667-2.986667 68.394666z" fill="currentColor"></path></svg></span>
-            </button>
-          </div>
-        </section>
-      </div>
+      <video class="remote-media" id="remoteVideo" autoplay loop playsinline preload="auto"></video>
+      <img class="remote-media is-hidden" id="remoteImage" alt="当前虚拟主播" />
       <div class="call-shade" aria-hidden="true"></div>
       <div class="call-grain" aria-hidden="true"></div>
 
@@ -53,35 +23,17 @@
           </svg>
           <span>Realita</span>
         </a>
-        <div class="call-identity" aria-live="polite">
+        <div class="call-identity">
           <span class="online-dot"></span>
           <div><strong id="profileName">小鹿酱</strong><small id="profileRole">甜心主播 · AI 视频对话</small></div>
         </div>
-        <button class="sound-chip" id="remoteSound" type="button" aria-label="开启声音" title="开启声音">
-          <svg class="sound-off-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"></path><path d="m16 9 5 5M21 9l-5 5"></path></svg>
-          <svg class="sound-on-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"></path><path d="M15 9.5a4 4 0 0 1 0 5M18 7a7 7 0 0 1 0 10"></path></svg>
-        </button>
+        <button class="sound-chip" id="remoteSound" type="button">开启声音</button>
       </header>
 
       <section class="local-preview is-hidden" id="localPreview" aria-label="本地画面预览">
         <video id="localVideo" autoplay muted playsinline></video>
         <span id="previewLabel">你</span>
       </section>
-
-      <aside class="call-performance-panel" aria-label="主播动作和情绪控制">
-        <div class="call-performance-grid">
-          <button class="call-performance-control" type="button" data-action="wave" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">〰</span><span>挥手</span></button>
-          <button class="call-performance-control" type="button" data-action="nod" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">↕</span><span>点头</span></button>
-          <button class="call-performance-control" type="button" data-action="breathe" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">◌</span><span>呼吸</span></button>
-          <button class="call-performance-control" type="button" data-action="sway" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">↔</span><span>摇摆</span></button>
-          <button class="call-performance-control" type="button" data-action="jump" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">↑</span><span>跳跃</span></button>
-          <button class="call-performance-control" type="button" data-emotion="happy" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">☺</span><span>开心</span></button>
-          <button class="call-performance-control" type="button" data-emotion="calm" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">◡</span><span>平静</span></button>
-          <button class="call-performance-control" type="button" data-emotion="surprised" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">✦</span><span>惊喜</span></button>
-          <button class="call-performance-control active" type="button" data-emotion="shy" aria-pressed="true"><span class="call-performance-icon" aria-hidden="true">◔</span><span>害羞</span></button>
-          <button class="call-performance-control" type="button" data-emotion="angry" aria-pressed="false"><span class="call-performance-icon" aria-hidden="true">≋</span><span>生气</span></button>
-        </div>
-      </aside>
 
       <aside class="chat-drawer" id="chatDrawer" aria-label="文字对话" aria-hidden="false">
         <div class="chat-heading">
@@ -93,8 +45,33 @@
         </div>
       </aside>
 
+      <section class="call-controls" aria-label="视频通话控制">
+        <span class="call-timer" id="callTimer">00:00</span>
+        <div class="control-row">
+          <button class="round-control" id="keyboardControl" type="button" aria-label="打开文字对话" aria-pressed="false">
+            <span><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"></path></svg></span>
+          </button>
+          <form class="chat-form" id="chatForm">
+            <input id="chatInput" type="text" maxlength="300" autocomplete="off" placeholder="输入你想说的话…" />
+            <button type="submit" aria-label="发送消息">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"></path><path d="m6.5 10.5 5.5-5.5 5.5 5.5"></path></svg>
+            </button>
+          </form>
+          <button class="round-control" id="micControl" type="button" aria-label="打开麦克风" aria-pressed="false">
+            <span><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><path d="M12 19v3M8 22h8"></path></svg></span>
+          </button>
+          <button class="round-control" id="cameraControl" type="button" aria-label="打开摄像头" aria-pressed="false">
+            <span><svg class="camera-on-icon" viewBox="0 0 24 24"><path d="M14 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"></path><path d="m16 10 5.2-3v10L16 14"></path></svg><svg class="camera-off-icon" viewBox="0 0 24 24"><path d="M10.7 6H14a2 2 0 0 1 2 2v2.5L21.2 7.5v8.6"></path><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"></path><path d="m2 2 20 20"></path></svg></span>
+          </button>
+          <button class="round-control hangup-control" id="hangupControl" type="button" aria-label="挂断">
+            <span><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"></path></svg></span>
+          </button>
+        </div>
+        <p>AI 生成数字人丨Realita</p>
+      </section>
+
       <div class="call-toast" id="callToast" role="status" aria-live="polite"></div>
     </main>
-    <script src="./call.js?v=14"></script>
+    <script src="./call.js?v=4"></script>
   </body>
 </html>

@@ -1,8 +1,5 @@
 const remoteVideo = document.querySelector('#remoteVideo');
 const remoteImage = document.querySelector('#remoteImage');
-const remoteVideoBackdrop = document.querySelector('#remoteVideoBackdrop');
-const remoteImageBackdrop = document.querySelector('#remoteImageBackdrop');
-const callStage = document.querySelector('#callStage');
 const profileName = document.querySelector('#profileName');
 const profileRole = document.querySelector('#profileRole');
 const chatProfileName = document.querySelector('#chatProfileName');
@@ -22,37 +19,18 @@ const chatForm = document.querySelector('#chatForm');
 const chatInput = document.querySelector('#chatInput');
 const messages = document.querySelector('#messages');
 const callToast = document.querySelector('#callToast');
-const callPerformanceControls = [...document.querySelectorAll('.call-performance-control')];
-const isEmbeddedCall = window.parent !== window;
-document.body.classList.toggle('is-banner-embed', isEmbeddedCall);
-
-window.addEventListener('message', (event) => {
-  if (event.source !== window.parent || event.data?.type !== 'realita-call-layout') return;
-  document.body.classList.toggle('is-banner-embed', event.data.layout === 'banner');
-});
-
-function syncRemoteMediaRatio(media) {
-  const width = media.videoWidth || media.naturalWidth;
-  const height = media.videoHeight || media.naturalHeight;
-  if (width && height) callStage.style.setProperty('--remote-media-ratio', `${width} / ${height}`);
-}
-
-remoteVideo.addEventListener('loadedmetadata', () => syncRemoteMediaRatio(remoteVideo));
-remoteImage.addEventListener('load', () => syncRemoteMediaRatio(remoteImage));
 
 const defaultProfile = {
   name: '小鹿酱',
   role: '甜心主播',
   line: '欢迎来到小鹿酱的直播间',
-  video: './assets/live-streamer-banner-female-v2.m4v',
+  video: './assets/live-streamer-xiaolu.mp4',
   image: '',
 };
 
 let profile = defaultProfile;
 try {
-  const embeddedProfile = new URLSearchParams(window.location.search).get('profile');
-  const storedProfile = sessionStorage.getItem('realitaCallProfile') || '{}';
-  profile = { ...defaultProfile, ...JSON.parse(embeddedProfile || storedProfile) };
+  profile = { ...defaultProfile, ...JSON.parse(sessionStorage.getItem('realitaCallProfile') || '{}') };
 } catch {}
 
 profileName.textContent = profile.name;
@@ -60,42 +38,21 @@ profileRole.textContent = `${profile.role} · AI 视频对话`;
 chatProfileName.textContent = profile.name;
 welcomeMessage.textContent = profile.line;
 
-// Reveal the embedded call only once its media can render a first frame.
-if (isEmbeddedCall) {
-  const media = profile.video ? remoteVideo : remoteImage;
-  const readyEvent = profile.video ? 'loadeddata' : 'load';
-  media.addEventListener(readyEvent, () => {
-    window.parent.postMessage({ type: 'realita-call-ready' }, '*');
-  }, { once: true });
-  media.addEventListener('error', () => {
-    window.parent.postMessage({ type: 'realita-call-media-error' }, '*');
-  }, { once: true });
-}
-
 if (profile.video) {
   remoteVideo.src = profile.video;
-  remoteVideoBackdrop.src = profile.video;
   remoteVideo.classList.remove('is-hidden');
-  remoteVideoBackdrop.classList.remove('is-hidden');
   remoteImage.classList.add('is-hidden');
-  remoteImageBackdrop.classList.add('is-hidden');
-  remoteVideoBackdrop.play().catch(() => {});
   remoteVideo.play().then(() => {
-    remoteSound.setAttribute('aria-label', '静音');
-    remoteSound.title = '静音';
+    remoteSound.textContent = '静音';
     remoteSound.classList.add('is-on');
   }).catch(() => {
     remoteVideo.muted = true;
     remoteVideo.play().catch(() => {});
   });
 } else {
-  const imageSource = profile.image || './assets/avatar-momo.svg';
-  remoteImage.src = imageSource;
-  remoteImageBackdrop.src = imageSource;
+  remoteImage.src = profile.image || './assets/avatar-momo.svg';
   remoteImage.classList.remove('is-hidden');
-  remoteImageBackdrop.classList.remove('is-hidden');
   remoteVideo.classList.add('is-hidden');
-  remoteVideoBackdrop.classList.add('is-hidden');
   remoteSound.hidden = true;
 }
 
@@ -115,44 +72,9 @@ function showCallToast(message) {
   toastTimer = window.setTimeout(() => callToast.classList.remove('is-visible'), 2200);
 }
 
-function replayRemoteVideo() {
-  if (!profile.video) return;
-  const replay = () => {
-    remoteVideo.currentTime = 0;
-    remoteVideo.play().catch(() => {});
-    if (remoteVideoBackdrop.readyState >= 1) {
-      remoteVideoBackdrop.currentTime = 0;
-      remoteVideoBackdrop.play().catch(() => {});
-    }
-  };
-  if (remoteVideo.readyState >= 1) replay();
-  else remoteVideo.addEventListener('loadedmetadata', replay, { once: true });
-}
-
-callPerformanceControls.forEach((button) => {
-  button.addEventListener('click', () => {
-    const groupSelector = button.dataset.action ? '[data-action]' : '[data-emotion]';
-    const shouldActivate = button.getAttribute('aria-pressed') !== 'true';
-
-    callPerformanceControls
-      .filter((control) => control.matches(groupSelector))
-      .forEach((control) => {
-        const active = shouldActivate && control === button;
-        control.classList.toggle('active', active);
-        control.setAttribute('aria-pressed', String(active));
-      });
-
-    replayRemoteVideo();
-    const label = button.lastElementChild.textContent;
-    showCallToast(shouldActivate ? `已应用「${label}」效果` : `已关闭「${label}」效果`);
-  });
-});
-
 remoteSound.addEventListener('click', () => {
   remoteVideo.muted = !remoteVideo.muted;
-  const soundLabel = remoteVideo.muted ? '开启声音' : '静音';
-  remoteSound.setAttribute('aria-label', soundLabel);
-  remoteSound.title = soundLabel;
+  remoteSound.textContent = remoteVideo.muted ? '开启声音' : '静音';
   remoteSound.classList.toggle('is-on', !remoteVideo.muted);
   if (remoteVideo.paused) remoteVideo.play().catch(() => {});
 });
@@ -272,10 +194,6 @@ hangupControl.addEventListener('click', () => {
   window.clearInterval(timer);
   stopStream(micStream);
   stopStream(cameraStream);
-  if (window.parent && window.parent !== window) {
-    window.parent.postMessage({ type: 'realita-call-ended' }, '*');
-    return;
-  }
   window.location.href = './index.html#studio';
 });
 
@@ -283,12 +201,6 @@ window.addEventListener('beforeunload', () => {
   stopStream(micStream);
   stopStream(cameraStream);
 });
-
-window.addEventListener('wheel', (event) => {
-  if (window.parent !== window && event.deltaY) {
-    window.parent.postMessage({ type: 'realita-call-scroll', deltaY: event.deltaY }, '*');
-  }
-}, { passive: true });
 
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && chatDrawer.classList.contains('is-open')) setChatOpen(false);

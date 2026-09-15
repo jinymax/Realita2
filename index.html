@@ -12,7 +12,7 @@
         document.documentElement.dataset.theme = 'dark';
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=202" />
+  <link rel="stylesheet" href="./styles.css?v=211" />
   </head>
   <body>
     <div class="aurora-background" aria-hidden="true">
@@ -21,7 +21,7 @@
       <span class="aurora-glow aurora-glow-three"></span>
       <span class="aurora-glow aurora-glow-four"></span>
     </div>
-    <header class="topbar">
+    <header class="topbar floating-topbar">
       <a class="brand" href="#" aria-label="Realita 首页">
         <svg class="brand-logo" width="195" height="231" viewBox="0 0 195 231" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M54.5 164C73.0015 164 88 178.998 88 197.5C88 216.002 73.0015 231 54.5 231C35.9985 231 21 216.002 21 197.5C21 178.998 35.9985 164 54.5 164ZM78.5 0C121.854 0 157 35.1456 157 78.5C157 96.093 151.212 112.334 141.437 125.423C138.108 129.88 136.064 135.264 136.456 140.812L136.719 144.525C136.904 147.145 137.65 149.693 138.906 151.999L140.115 154.22C144.085 161.507 153.202 164 161.5 164C180.002 164 195 178.998 195 197.5C195 216.002 180.002 231 161.5 231C142.998 231 128 216.002 128 197.5C128 196.061 128.09 194.643 128.267 193.252C129.572 182.943 129.576 171.044 122.05 163.879L120.801 162.69C119.276 161.239 117.533 160.038 115.634 159.131L110.245 156.556C105.599 154.336 100.3 154.108 95.2686 155.203C89.8658 156.38 84.2553 157 78.5 157C35.1456 157 0 121.854 0 78.5C0 35.1456 35.1456 0 78.5 0ZM47.5 53C31.7599 53 19 65.7599 19 81.5C19 97.2401 31.7599 110 47.5 110C63.2401 110 76 97.2401 76 81.5C76 65.7599 63.2401 53 47.5 53Z" fill="currentColor"></path>
@@ -41,7 +41,6 @@
         </a>
       </nav>
       <div class="nav-actions">
-        <button class="login-button">登录</button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换到浅色模式" aria-pressed="false" title="切换页面主题">
           <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <circle cx="12" cy="12" r="3.5"></circle>
@@ -55,251 +54,233 @@
       </div>
     </header>
 
-    <main id="studio" class="studio-shell">
-      <section class="stage photo-mode video-mode banner-mode" id="liveStage" aria-label="虚拟主播视频 Banner">
-        <div class="stage-glow"></div>
-        <div class="live-badge"><span></span> LIVE PREVIEW</div>
-        <div class="stage-status">
-          <span class="signal-bars"><i></i><i></i><i></i></span>
-          <span>1080P · 60 FPS</span>
-        </div>
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <video id="heroVideo" class="hero-video" muted autoplay playsinline preload="auto" aria-label="Realita 虚拟主播演示视频">
-          <source src="./assets/live-streamer-banner-female-v2.m4v" type="video/mp4" />
-        </video>
-        <img id="heroAvatar" class="hero-avatar media-hidden" alt="" />
-        <canvas id="mediaTransition" class="media-transition" aria-hidden="true"></canvas>
-        <div class="tilt-light" aria-hidden="true"></div>
-        <div class="banner-avatar-switcher" id="bannerAvatarSwitcher" aria-label="切换虚拟主播">
-          <button class="banner-avatar-button active" type="button" data-slide-index="0" aria-label="切换到主播一" aria-pressed="true">
-            <img src="./assets/banner-avatar-01.png" alt="主播一头像" />
-          </button>
-          <button class="banner-avatar-button" type="button" data-slide-index="1" aria-label="切换到主播二" aria-pressed="false">
-            <img src="./assets/banner-avatar-02.png" alt="主播二头像" />
-          </button>
-        </div>
-        <div class="video-controls" aria-label="视频通话控制">
-          <button class="video-control call-control" id="callButton" type="button" aria-pressed="false">
-            <span class="control-label">聊天</span>
-            <span class="control-icon" aria-hidden="true">
-              <svg viewBox="0 0 28 27" fill="none"><path d="M10.0737 0.970093C5.28773 1.50158 1.50651 5.27763 0.969848 10.0636" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391C1.58965 19.5047 -0.231621 20.1389 3.78156 24.1497C4.28408 24.5536 7.47686 29.4123 18.6974 18.1946C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703C20.638 -0.744844 20.0134 1.08568 16.847 4.25128C13.564 7.53484 19.5275 8.70893 14.3691 13.866Z" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </button>
-          <button class="video-control mute-control is-muted" id="muteButton" type="button" aria-label="取消静音" aria-pressed="true">
-            <span class="control-icon" aria-hidden="true">
-              <svg class="volume-on-icon" viewBox="0 0 46 46" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.79555 23.0001C4.7902 25.3569 4.68503 28.5715 6.14312 29.7731C7.50316 30.8939 8.46036 30.6051 10.9434 30.7874C13.4282 30.9713 18.6723 38.2755 22.715 35.9651C24.8005 34.3252 24.9556 30.8871 24.9556 23.0001C24.9556 15.1131 24.8005 11.675 22.715 10.035C18.6723 7.7229 13.4282 15.0289 10.9434 15.2128C8.46036 15.395 7.50316 15.1062 6.14312 16.227C4.68503 17.4286 4.7902 20.6433 4.79555 23.0001Z" stroke="currentColor" stroke-width="2.87498" stroke-linecap="round" stroke-linejoin="round"/><path d="M37.5361 11.3157C42.4237 18.3517 42.4398 27.6329 37.5361 34.6827" stroke="currentColor" stroke-width="2.87498" stroke-linecap="round" stroke-linejoin="round"/><path d="M32.7383 15.9358C35.2516 20.3262 35.2516 25.6879 32.7383 30.0646" stroke="currentColor" stroke-width="2.87498" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <svg class="volume-off-icon" viewBox="0 0 46 46" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.79555 23.0001C4.7902 25.3569 4.68503 28.5715 6.14312 29.7731C7.50316 30.8939 8.46036 30.6051 10.9434 30.7874C13.4282 30.9713 18.6723 38.2755 22.715 35.9651C24.8005 34.3252 24.9556 30.8871 24.9556 23.0001C24.9556 15.1131 24.8005 11.675 22.715 10.035C18.6723 7.7229 13.4282 15.0289 10.9434 15.2128C8.46036 15.395 7.50316 15.1062 6.14312 16.227C4.68503 17.4286 4.7902 20.6433 4.79555 23.0001Z" stroke="currentColor" stroke-width="2.87498" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 17L40 29M40 17L31 29" stroke="currentColor" stroke-width="2.87498" stroke-linecap="round"/></svg>
-            </span>
-          </button>
-        </div>
-        <div class="stage-floor"></div>
-        <div class="voice-card">
-          <div class="voice-icon">✦</div>
-          <div><small>正在播报</small><strong id="nowSpeaking">欢迎来到 Realita</strong></div>
-          <div class="waveform" aria-hidden="true">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <main id="studio" class="showcase-shell">
+    <section id="showcase" class="recommendations editorial-recommendations" aria-labelledby="recommendationTitle">
+      <div class="recommendation-layout">
+        <div class="recommendation-copy">
+          <span class="recommendation-kicker">REALITA CAST</span>
+          <h2 id="recommendationTitle">Yuna</h2>
+          <p class="recommendation-host-intro" id="recommendationHostIntro">温柔陪伴 · 自然对话</p>
+          <div class="recommendation-copy-bottom">
+            <strong>找到属于你的表达方式</strong>
+            <p>从温柔陪伴到专业表达，每个角色都拥有独特的声音、个性与互动方式。</p>
+            <label class="recommendation-upload-card" id="recommendationUploadZone" for="recommendationUpload">
+              <input id="recommendationUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+              <span class="recommendation-upload-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+              </span>
+              <span><strong>创建你的形象</strong><small>上传 JPG、PNG 或 WEBP</small></span>
+              <span class="recommendation-upload-action">↗</span>
+              <span class="recommendation-upload-feedback" id="recommendationUploadFeedback" aria-live="polite"></span>
+            </label>
           </div>
         </div>
-        <button class="sound-button" id="soundToggle" aria-label="切换声音">⌁</button>
-        <div class="performance-panel-body banner-performance-controls" aria-label="当前主播动作和情绪控制">
-          <button class="performance-scroll-button" id="performancePrevious" type="button" aria-label="向上查看更多效果">↑</button>
-          <div class="performance-controls performance-strip" id="performanceControlTrack" aria-label="主播动作和情绪效果">
-            <button class="performance-control" type="button" data-action="wave" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8.5 11V5.5a1.5 1.5 0 0 1 3 0V10M11.5 9V4.5a1.5 1.5 0 0 1 3 0V10M14.5 9V6a1.5 1.5 0 0 1 3 0v6M8.5 9.5 7.2 8.2a1.6 1.6 0 0 0-2.3 2.2l3.2 4.2c1.2 1.6 3 2.4 5 2.4h.4a4 4 0 0 0 4-4v-1"/><path d="M4 4.5 2.5 3M20 5l1.5-1.5"/></svg></span>
-              <span>挥手</span>
+
+        <div class="recommendation-feature">
+          <div class="recommendation-main-column">
+          <article class="recommendation-card recommendation-card-main" data-category="popular companion" data-title="Yuna 温柔陪伴">
+            <video src="./assets/recommendations/vidu-yuna-feature.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Yuna 温柔陪伴虚拟人物视频"></video>
+            <div class="recommendation-overlay"><span>FEATURED 01</span><div><h3>Yuna</h3><p>温柔陪伴 · 自然对话</p></div><button type="button" aria-label="选择 Yuna">↗</button></div>
+            <button class="video-control call-control recommendation-chat-control" type="button" aria-label="与 Yuna 聊天">
+              <span class="control-label">聊天</span>
+              <span class="control-icon" aria-hidden="true">
+                <svg viewBox="0 0 28 27" fill="none">
+                  <path d="M10.0737 0.970093C5.28773 1.50158 1.50651 5.27763 0.969848 10.0636" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"></path>
+                  <path d="M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"></path>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391C1.58965 19.5047 -0.231621 20.1389 3.78156 24.1497C4.28408 24.5536 7.47686 29.4123 18.6974 18.1946C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703C20.638 -0.744844 20.0134 1.08568 16.847 4.25128C13.564 7.53484 19.5275 8.70893 14.3691 13.866Z" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </span>
             </button>
-            <button class="performance-control" type="button" data-action="nod" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="4"/><path d="M7 20c.8-3.2 2.5-4.8 5-4.8s4.2 1.6 5 4.8M19 8v6m0 0-2-2m2 2 2-2"/></svg></span>
-              <span>点头</span>
-            </button>
-            <button class="performance-control" type="button" data-action="breathe" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.8 2M3 15c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.8 2"/></svg></span>
-              <span>呼吸</span>
-            </button>
-            <button class="performance-control" type="button" data-action="sway" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 7c1.2-1.3 2.5-2 4-2s2.8.7 4 2M8 17c1.2 1.3 2.5 2 4 2s2.8-.7 4-2M5 12h14M7 9l-2 3 2 3M17 9l2 3-2 3"/></svg></span>
-              <span>摇摆</span>
-            </button>
-            <button class="performance-control" type="button" data-action="jump" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 18V6m0 0L8.5 9.5M12 6l3.5 3.5M7 20h10"/></svg></span>
-              <span>跳跃</span>
-            </button>
-            <button class="performance-control" type="button" data-emotion="happy" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M8.5 10h.01M15.5 10h.01M8.5 14c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2"/></svg></span>
-              <span>开心</span>
-            </button>
-            <button class="performance-control" type="button" data-emotion="calm" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M7.5 10.5c1 1 2 1 3 0M13.5 10.5c1 1 2 1 3 0M9 15h6"/></svg></span>
-              <span>平静</span>
-            </button>
-            <button class="performance-control" type="button" data-emotion="surprised" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M8.5 9.5h.01M15.5 9.5h.01"/><circle cx="12" cy="15" r="1.7"/><path d="m19 3 .5 1.5L21 5l-1.5.5L19 7l-.5-1.5L17 5l1.5-.5L19 3Z"/></svg></span>
-              <span>惊喜</span>
-            </button>
-            <button class="performance-control active" type="button" data-emotion="shy" aria-pressed="true">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M8 10.5c.8.7 1.6.7 2.4 0M13.6 10.5c.8.7 1.6.7 2.4 0M9.5 15c1.7-1 3.3-1 5 0M6.5 13.5h2M15.5 13.5h2"/></svg></span>
-              <span>害羞</span>
-            </button>
-            <button class="performance-control" type="button" data-emotion="angry" aria-pressed="false">
-              <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="m7.5 9 3 1M16.5 9l-3 1M8.5 15.5c2.3-1.5 4.7-1.5 7 0"/></svg></span>
-              <span>生气</span>
-            </button>
+          </article>
+          <div class="performance-panel-body banner-performance-controls recommendation-performance-controls" aria-label="当前主播动作和情绪控制">
+            <button class="performance-scroll-button" id="performancePrevious" type="button" aria-label="向左查看更多效果">‹</button>
+            <div class="performance-controls performance-strip" id="performanceControlTrack" aria-label="主播动作和情绪效果">
+              <button class="performance-control" type="button" data-action="wave" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8.5 11V5.5a1.5 1.5 0 0 1 3 0V10M11.5 9V4.5a1.5 1.5 0 0 1 3 0V10M14.5 9V6a1.5 1.5 0 0 1 3 0v6M8.5 9.5 7.2 8.2a1.6 1.6 0 0 0-2.3 2.2l3.2 4.2c1.2 1.6 3 2.4 5 2.4h.4a4 4 0 0 0 4-4v-1"/><path d="M4 4.5 2.5 3M20 5l1.5-1.5"/></svg></span>
+                <span>挥手</span>
+              </button>
+              <button class="performance-control" type="button" data-action="nod" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="4"/><path d="M7 20c.8-3.2 2.5-4.8 5-4.8s4.2 1.6 5 4.8M19 8v6m0 0-2-2m2 2 2-2"/></svg></span>
+                <span>点头</span>
+              </button>
+              <button class="performance-control" type="button" data-action="breathe" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.8 2M3 15c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.8 2"/></svg></span>
+                <span>呼吸</span>
+              </button>
+              <button class="performance-control" type="button" data-action="sway" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 7c1.2-1.3 2.5-2 4-2s2.8.7 4 2M8 17c1.2 1.3 2.5 2 4 2s2.8-.7 4-2M5 12h14M7 9l-2 3 2 3M17 9l2 3-2 3"/></svg></span>
+                <span>摇摆</span>
+              </button>
+              <button class="performance-control" type="button" data-action="jump" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 18V6m0 0L8.5 9.5M12 6l3.5 3.5M7 20h10"/></svg></span>
+                <span>跳跃</span>
+              </button>
+              <button class="performance-control" type="button" data-emotion="happy" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M8.5 10h.01M15.5 10h.01M8.5 14c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2"/></svg></span>
+                <span>开心</span>
+              </button>
+              <button class="performance-control" type="button" data-emotion="calm" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M7.5 10.5c1 1 2 1 3 0M13.5 10.5c1 1 2 1 3 0M9 15h6"/></svg></span>
+                <span>平静</span>
+              </button>
+              <button class="performance-control" type="button" data-emotion="surprised" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M8.5 9.5h.01M15.5 9.5h.01"/><circle cx="12" cy="15" r="1.7"/><path d="m19 3 .5 1.5L21 5l-1.5.5L19 7l-.5-1.5L17 5l1.5-.5L19 3Z"/></svg></span>
+                <span>惊喜</span>
+              </button>
+              <button class="performance-control" type="button" data-emotion="shy" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M8 10.5c.8.7 1.6.7 2.4 0M13.6 10.5c.8.7 1.6.7 2.4 0M9.5 15c1.7-1 3.3-1 5 0M6.5 13.5h2M15.5 13.5h2"/></svg></span>
+                <span>害羞</span>
+              </button>
+              <button class="performance-control" type="button" data-emotion="angry" aria-pressed="false">
+                <span class="performance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="m7.5 9 3 1M16.5 9l-3 1M8.5 15.5c2.3-1.5 4.7-1.5 7 0"/></svg></span>
+                <span>生气</span>
+              </button>
+            </div>
+            <button class="performance-scroll-button" id="performanceNext" type="button" aria-label="向右查看更多效果">›</button>
           </div>
-          <button class="performance-scroll-button" id="performanceNext" type="button" aria-label="向下查看更多效果">↓</button>
+          </div>
+          <div class="recommendation-side-stack">
+            <article class="recommendation-card recommendation-card-mini" data-category="business popular" data-title="Mia 品牌顾问" role="button" tabindex="0" aria-label="将 Mia 切换为主图">
+              <img src="./assets/recommendations/c2c87655-4945-4371-bddf-a7d708d956bf.png" alt="Mia 品牌顾问虚拟人物" loading="lazy" />
+              <div class="recommendation-overlay"><span>精选</span><div><h3>Mia</h3><p>品牌顾问 · 商务沟通</p></div><button type="button" aria-label="选择 Mia">↗</button></div>
+            </article>
+            <article class="recommendation-card recommendation-card-mini" data-category="business" data-title="Noah 专业顾问" role="button" tabindex="0" aria-label="将 Noah 切换为主图">
+              <img src="./assets/recommendations/54a6c508-e5c8-4cd2-980c-8510d7c72746.png" alt="Noah 专业顾问虚拟人物" loading="lazy" />
+              <div class="recommendation-overlay"><span>商务</span><div><h3>Noah</h3><p>专业顾问 · 清晰表达</p></div><button type="button" aria-label="选择 Noah">↗</button></div>
+            </article>
+            <article class="recommendation-card recommendation-card-mini" data-category="companion" data-title="Evan 日常陪伴" role="button" tabindex="0" aria-label="将 Evan 切换为主图">
+              <img src="./assets/recommendations/73c0b650-0c5f-419c-855d-5a3f532906ba.png" alt="Evan 日常陪伴虚拟人物" loading="lazy" />
+              <div class="recommendation-overlay"><span>新面孔</span><div><h3>Evan</h3><p>日常陪伴 · 轻松聊天</p></div><button type="button" aria-label="选择 Evan">↗</button></div>
+            </article>
+            <article class="recommendation-card recommendation-card-mini" data-category="popular companion" data-title="Rina 活力伙伴" role="button" tabindex="0" aria-label="将 Rina 切换为主图">
+              <img src="./assets/recommendations/d1d3fc0d-472d-4d14-9a04-cc61ec2ddd67.png" alt="Rina 活力伙伴虚拟人物" loading="lazy" />
+              <div class="recommendation-overlay"><span>热门</span><div><h3>Rina</h3><p>活力伙伴 · 趣味互动</p></div><button type="button" aria-label="选择 Rina">↗</button></div>
+            </article>
+          </div>
         </div>
-      </section>
-
-  </main>
-
-    <section id="showcase" class="recommendations" aria-label="虚拟主播推荐与自定义上传">
-      <div class="recommendation-grid" id="recommendationGrid">
-        <article class="recommendation-card" data-category="popular companion" data-title="Luo 灵境旅人" data-role="东方幻想主播" data-line="你好，我是 Luo，很高兴在这里见到你。">
-          <img src="./assets/recommendations/avatar-luo-fantasy.png" alt="Luo 东方幻想虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>幻想</span><div><h3>Luo</h3><p>灵境旅人 · 东方幻想</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Luo 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Luo">♡</button></div></div>
-        </article>
-        <article class="recommendation-card" data-category="business" data-title="Noah 专业顾问" data-role="专业顾问" data-line="你好，我是 Noah，随时准备和你深入交流。">
-          <img src="./assets/recommendations/avatar-buddy-golden-retriever-v2.png" alt="Noah 专业顾问虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>商务</span><div><h3>Noah</h3><p>专业顾问 · 清晰表达</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Noah 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Noah">♡</button></div></div>
-        </article>
-        <article class="recommendation-card" data-category="companion" data-title="Evan 日常陪伴" data-role="日常陪伴" data-line="你好，我是 Evan，今天想聊些什么？">
-          <img src="./assets/recommendations/73c0b650-0c5f-419c-855d-5a3f532906ba.png" alt="Evan 日常陪伴虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>新面孔</span><div><h3>Evan</h3><p>日常陪伴 · 轻松聊天</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Evan 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Evan">♡</button></div></div>
-        </article>
-        <article class="recommendation-card" data-category="business popular" data-title="Ranger 机械牛仔" data-role="机械牛仔" data-line="嘿，旅行者。Ranger 已准备好与你对话。">
-          <img src="./assets/recommendations/avatar-ranger-robot.png" alt="Ranger 机械牛仔虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>智能</span><div><h3>Ranger</h3><p>机械牛仔 · 趣味互动</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Ranger 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Ranger">♡</button></div></div>
-        </article>
-        <article class="recommendation-card" data-category="companion popular" data-title="Chloe 治愈陪伴" data-role="治愈陪伴" data-line="你好，我是 Chloe，陪你轻松聊一会儿。">
-          <img src="./assets/recommendations/15fc34fc-69b7-476e-8416-21f001df73c9.png" alt="Chloe 治愈陪伴虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>精选</span><div><h3>Chloe</h3><p>治愈陪伴 · 多语交流</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Chloe 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Chloe">♡</button></div></div>
-        </article>
       </div>
+
+      <div class="recommendation-more-grid" id="recommendationGrid" hidden></div>
       <p class="recommendation-empty" id="recommendationEmpty" hidden>暂时没有匹配的人物，换个关键词试试。</p>
     </section>
+    </main>
 
-    <section class="creation-space" aria-labelledby="creationSpaceTitle">
-      <div class="creation-space-copy">
-        <span>CREATE YOUR REALITA</span>
-        <h2 id="creationSpaceTitle">角色生成</h2>
-        <p>上传一张喜欢的图片，快速创建属于你的虚拟主播。让独特的形象成为表达、陪伴与创意互动的新方式。</p>
-        <div class="creation-space-meta">
-          <span>本地安全处理</span>
-          <span>即时生成预览</span>
+    <section class="kindroid-inspired social-proof" aria-label="Realita 使用数据">
+      <p class="section-microcopy">创作者正在用 Realita 把想法带到镜头前</p>
+      <div class="proof-metrics" aria-label="平台数据">
+        <span><strong>80K+</strong> 创作片段</span>
+        <span><strong>4.9</strong> 用户评分</span>
+        <span><strong>24/7</strong> 随时开播</span>
+      </div>
+      <div class="proof-marquee" aria-hidden="true">
+        <div class="proof-marquee-track">
+          <span>REALITA LIVE</span><span>VOICE STUDIO</span><span>CREATOR SPACE</span><span>AI CAST</span><span>REAL-TIME STORY</span>
+          <span>REALITA LIVE</span><span>VOICE STUDIO</span><span>CREATOR SPACE</span><span>AI CAST</span><span>REAL-TIME STORY</span>
         </div>
       </div>
-      <label class="recommendation-upload-card creation-upload" id="recommendationUploadZone" for="recommendationUpload">
-        <input id="recommendationUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
-        <span class="recommendation-upload-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
-        </span>
-        <strong>上传图片，创建你的形象</strong>
-        <small>点击或拖拽上传<br />JPG、PNG、WEBP · 最大 10MB</small>
-        <span class="recommendation-upload-action">选择图片</span>
-        <span class="recommendation-upload-feedback" id="recommendationUploadFeedback" aria-live="polite"></span>
-      </label>
     </section>
 
-    <section class="customer-cases" aria-labelledby="caseTitle">
-      <div class="section-intro">
-        <span>REALITA IN ACTION</span>
-        <h2 id="caseTitle">客户案例</h2>
-        <p>从日常陪伴到品牌表达，用可持续运营的虚拟角色，建立更有温度的沟通方式。</p>
-      </div>
-      <div class="case-list">
-        <article class="case-card case-card-culture">
-          <div class="case-visual">
-            <img src="./assets/recommendations/avatar-luo-fantasy.png" alt="东方幻想风格的虚拟主播案例" loading="lazy" />
-            <span class="case-label">文旅内容</span>
+    <section class="kindroid-inspired connect-showcase" aria-labelledby="connectTitle">
+      <header class="inspired-section-heading">
+        <span>ALL THE WAYS TO CONNECT</span>
+        <h2 id="connectTitle">即呼即通体验</h2>
+      </header>
+
+      <div class="connection-grid">
+        <article class="connection-card connection-text-card">
+          <div class="message-stack" aria-label="文字聊天示例">
+            <p class="message sent">今晚的开场白，准备好了吗？</p>
+            <p class="message received">当然。我还为你留了一点惊喜。</p>
+            <p class="message typing" aria-label="正在输入"><i></i><i></i><i></i></p>
           </div>
-          <div class="case-copy">
-            <span class="case-index">01 / 春山文旅</span>
-            <p>以东方幻想角色串联景区故事、活动预告与直播问答。</p>
-          </div>
+          <footer><span>01</span><strong>文字对话</strong></footer>
         </article>
-        <article class="case-card case-card-product">
-          <div class="case-visual">
-            <img src="./assets/recommendations/avatar-ranger-robot.png" alt="机器人虚拟主播产品演示案例" loading="lazy" />
-            <span class="case-label">产品沟通</span>
+
+        <article class="connection-card connection-voice-card">
+          <div class="voice-orbit" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
-          <div class="case-copy">
-            <span class="case-index">02 / Morrow Lab</span>
-            <p>用专属角色承接新品发布、产品答疑与多语表达。</p>
-          </div>
+          <p class="voice-caption">“把此刻的语气，也传递给你。”</p>
+          <footer><span>02</span><strong>自然语音</strong></footer>
         </article>
-        <article class="case-card case-card-community">
-          <div class="case-visual">
-            <img src="./assets/recommendations/15fc34fc-69b7-476e-8416-21f001df73c9.png" alt="治愈风格的虚拟陪伴主播案例" loading="lazy" />
-            <span class="case-label">社群陪伴</span>
+
+        <article class="connection-card connection-video-card">
+          <div class="video-preview-device" aria-label="实时视频通话示例">
+            <video src="./assets/figma-reference/phone-demo.webm" autoplay muted loop playsinline preload="metadata" aria-label="实时视频通话演示"></video>
+            <span class="live-pill"><i></i> LIVE</span>
+            <span class="call-duration">00:17</span>
+            <div class="video-call-actions" aria-label="视频通话控制">
+              <button type="button" aria-label="切换摄像头">
+                <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H3ZM15 4.75a.75.75 0 0 0-1.28-.53l-2 2a.75.75 0 0 0-.22.53v2.5c0 .199.079.39.22.53l2 2a.75.75 0 0 0 1.28-.53v-6.5Z"></path></svg>
+              </button>
+              <button type="button" aria-label="切换麦克风">
+                <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a2 2 0 0 0-2 2v4a2 2 0 1 0 4 0V3a2 2 0 0 0-2-2Z"></path><path d="M4.5 7A.75.75 0 0 0 3 7a5.001 5.001 0 0 0 4.25 4.944V13.5h-1.5a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-1.5v-1.556A5.001 5.001 0 0 0 13 7a.75.75 0 0 0-1.5 0 3.5 3.5 0 1 1-7 0Z"></path></svg>
+              </button>
+              <button class="end-call" type="button" aria-label="结束通话">
+                <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="m3.855 7.286 1.067-.534a1 1 0 0 0 .542-1.046l-.44-2.858A1 1 0 0 0 4.036 2H3a1 1 0 0 0-1 1v2c0 .709.082 1.4.238 2.062a9.012 9.012 0 0 0 6.7 6.7A9.024 9.024 0 0 0 11 14h2a1 1 0 0 0 1-1v-1.036a1 1 0 0 0-.848-.988l-2.858-.44a1 1 0 0 0-1.046.542l-.534 1.067a7.52 7.52 0 0 1-4.86-4.859Z" clip-rule="evenodd"></path></svg>
+              </button>
+            </div>
           </div>
-          <div class="case-copy">
-            <span class="case-index">03 / Little Nest</span>
-            <p>用自然的角色内容，为社群提供随时可聊的陪伴。</p>
-          </div>
+          <footer><span>03</span><strong>视频通话</strong></footer>
         </article>
       </div>
     </section>
 
-    <section id="pricing" class="pricing-section" aria-labelledby="pricingTitle">
-      <div class="section-intro pricing-intro">
-        <span>FLEXIBLE PLANS</span>
-        <h2 id="pricingTitle">产品定价</h2>
-        <p>从灵感试用到团队协作，选择适合现在创作节奏的方案。</p>
-      </div>
-      <div class="pricing-grid">
-        <article class="pricing-card">
-          <span class="pricing-plan">体验版</span>
-          <p class="pricing-desc">适合第一次创建自己的虚拟角色</p>
-          <p class="price"><strong>¥0</strong><span>/ 月</span></p>
-          <ul>
-            <li>1 个角色形象</li>
-            <li>基础动作与情绪</li>
-            <li>每月 10 分钟体验时长</li>
-          </ul>
-          <a href="#studio" class="pricing-cta">免费开始 <span>↗</span></a>
+    <section class="kindroid-inspired meet-cast" aria-labelledby="meetCastTitle">
+      <header class="inspired-section-heading inspired-section-heading-centered">
+        <span>SAY HELLO</span>
+        <h2 id="meetCastTitle">下一次，会遇见谁？</h2>
+      </header>
+
+      <div class="meet-cast-grid">
+        <article class="meet-cast-card meet-cast-side">
+          <img src="./assets/figma-reference/meet-listener.png" alt="湖边独处的安静场景" loading="lazy" />
+          <div><span>安静倾听者</span><h3>小鹿</h3><p>让说不出口的情绪，也有被听见的地方。</p></div>
         </article>
-        <article class="pricing-card featured">
-          <span class="pricing-badge">推荐</span>
-          <span class="pricing-plan">创作版</span>
-          <p class="pricing-desc">面向稳定输出内容的个人创作者</p>
-          <p class="price"><strong>¥99</strong><span>/ 月</span></p>
-          <ul>
-            <li>5 个角色形象</li>
-            <li>完整动作与情绪控制</li>
-            <li>每月 300 分钟生成时长</li>
-            <li>高清内容导出</li>
-          </ul>
-          <a href="#studio" class="pricing-cta">开始创作 <span>↗</span></a>
+        <article class="meet-cast-card meet-cast-main">
+          <img src="./assets/figma-reference/meet-yuna.png" alt="温暖自然光中的陪伴角色" loading="lazy" />
+          <div><span>今日推荐</span><h3>Yuna</h3><p>温柔、敏锐，记得每一次对话留下的细节。</p><button type="button">开始聊天 <b>↗</b></button></div>
         </article>
-        <article class="pricing-card">
-          <span class="pricing-plan">团队版</span>
-          <p class="pricing-desc">为品牌与团队打造专属数字资产</p>
-          <p class="price"><strong>¥299</strong><span>/ 月</span></p>
-          <ul>
-            <li>不限角色形象数量</li>
-            <li>多人协作与素材管理</li>
-            <li>每月 1,500 分钟生成时长</li>
-            <li>专属服务支持</li>
-          </ul>
-          <a href="#studio" class="pricing-cta">联系顾问 <span>↗</span></a>
+        <article class="meet-cast-card meet-cast-side">
+          <img src="./assets/figma-reference/meet-mia.png" alt="镜面中的人物生活片段" loading="lazy" />
+          <div><span>灵感搭档</span><h3>Mia</h3><p>在每个模糊想法里，找到清晰的表达。</p></div>
         </article>
       </div>
     </section>
 
-    <div class="call-flow" id="callFlow" hidden aria-live="polite">
-      <section class="call-dialer" aria-labelledby="dialName">
-        <div class="dial-aurora" aria-hidden="true"></div>
-        <div class="dial-content">
-          <div class="dial-avatar"><img id="dialAvatar" alt="" /></div>
-          <span class="dial-status">正在建立连接<span class="dial-status-dots" aria-hidden="true"><i></i><i></i><i></i></span></span>
-          <strong id="dialName">Realita 主播</strong>
-          <p>准备开始一场新的对话</p>
-          <button class="dial-cancel" id="dialCancel" type="button">取消</button>
+    <section class="kindroid-inspired presence-story" aria-labelledby="presenceTitle">
+      <header class="inspired-section-heading inspired-section-heading-centered">
+        <span>RIGHT THERE WITH YOU</span>
+        <h2 id="presenceTitle">看见表情，听见声音，<br />让陪伴真实发生。</h2>
+      </header>
+
+      <div class="presence-canvas">
+        <figure class="presence-photo presence-photo-large">
+          <video src="./assets/figma-reference/presence-call.mp4" autoplay muted playsinline preload="metadata" aria-label="虚拟人物视频通话演示"></video>
+          <figcaption>她会记得你提过的远方，也会陪你抵达。</figcaption>
+        </figure>
+        <figure class="presence-photo presence-photo-small">
+          <img src="./assets/figma-reference/presence-side.png" alt="阳光下咖啡与书的静物场景" loading="lazy" />
+          <figcaption>记住的不只是答案，还有你的生活节奏。</figcaption>
+        </figure>
+        <div class="presence-chat" aria-label="主动关心对话示例">
+          <span class="presence-avatar">R</span>
+          <div><small>REALITA · 刚刚</small><p>你说今天要做那场重要的直播。<br />结束了吗？我在这里。</p></div>
         </div>
-      </section>
-      <iframe class="call-embed" id="callEmbed" title="Realita 视频通话" allow="autoplay; camera; microphone"></iframe>
-    </div>
+        <div class="presence-composer" aria-hidden="true"><span>告诉她，今天发生了什么…</span><b>发送</b></div>
+      </div>
+    </section>
+
+    <footer class="realita-footer" id="pricing">
+      <a class="footer-brand" href="#" aria-label="Realita 首页"><img src="./assets/figma-reference/realita-logo.svg" alt="" /><span>Realita</span></a>
+      <div class="footer-links">
+        <div><span>PRODUCT</span><a href="#studio">创作空间</a><a href="#showcase">灵感广场</a><a href="#pricing">定价方案</a></div>
+        <div><span>REALITA</span><a href="#">关于我们</a><a href="#">更新日志</a><a href="#">隐私与安全</a></div>
+        <div><span>FOLLOW</span><a href="#">小红书</a><a href="#">哔哩哔哩</a><a href="#">微信</a></div>
+      </div>
+    </footer>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./app.js?v=53"></script>
+    <script src="./app.js?v=56"></script>
   </body>
 </html>

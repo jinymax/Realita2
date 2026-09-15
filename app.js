@@ -1,37 +1,69 @@
-const hero = document.querySelector('#heroAvatar');
-const video = document.querySelector('#heroVideo');
 const stage = document.querySelector('#liveStage');
-const speaking = document.querySelector('#nowSpeaking');
-const soundButton = document.querySelector('#soundToggle');
+const gallery = document.querySelector('#bendingGallery');
+const galleryCards = [...document.querySelectorAll('.bending-card')];
+const galleryVideos = [...document.querySelectorAll('.bending-card video')];
 const toast = document.querySelector('#toast');
 const callButton = document.querySelector('#callButton');
 const muteButton = document.querySelector('#muteButton');
 const themeToggle = document.querySelector('#themeToggle');
 const topbar = document.querySelector('.topbar');
-const transitionCanvas = document.querySelector('#mediaTransition');
-const performanceControlTrack = document.querySelector('#performanceControlTrack');
-const performancePrevious = document.querySelector('#performancePrevious');
-const performanceNext = document.querySelector('#performanceNext');
-const performanceControls = [...document.querySelectorAll('.performance-control')];
-const bannerAvatarButtons = [...document.querySelectorAll('.banner-avatar-button')];
-const recommendationGrid = document.querySelector('#recommendationGrid');
+const recommendationSearch = document.querySelector('#recommendationSearch');
 const recommendationEmpty = document.querySelector('#recommendationEmpty');
 const recommendationUpload = document.querySelector('#recommendationUpload');
 const recommendationUploadZone = document.querySelector('#recommendationUploadZone');
 const recommendationUploadFeedback = document.querySelector('#recommendationUploadFeedback');
-const callFlow = document.querySelector('#callFlow');
-const callEmbed = document.querySelector('#callEmbed');
-const dialAvatar = document.querySelector('#dialAvatar');
-const dialName = document.querySelector('#dialName');
-const dialCancel = document.querySelector('#dialCancel');
+const presenceCallVideo = document.querySelector('.presence-photo-large video');
+const actionControls = [...document.querySelectorAll('[data-action]')];
+const emotionControls = [...document.querySelectorAll('[data-emotion]')];
+const performanceTrack = document.querySelector('#performanceControlTrack');
+const performancePrevious = document.querySelector('#performancePrevious');
+const performanceNext = document.querySelector('#performanceNext');
+const performanceTarget = document.querySelector('.recommendation-card-main');
 
 const bannerSlides = [
-  { name: 'Realita 主播一', role: '虚拟主播', video: './assets/live-streamer-banner-female-v2.m4v', image: './assets/banner-avatar-01.png', line: '欢迎来到 Realita' },
-  { name: 'Realita 主播二', role: '虚拟主播', video: './assets/live-streamer-banner-02.m4v', image: './assets/banner-avatar-02.png', line: '欢迎来到 Realita' },
+  { name: '虚拟人物 1', role: '虚拟主播', line: '很高兴见到你', image: './assets/banner-01.png' },
+  { name: '虚拟人物 2', role: '虚拟主播', line: '今天想聊些什么？', image: './assets/banner-02.png' },
+  { name: '虚拟人物 3', role: '虚拟主播', line: '欢迎进入我的直播间', image: './assets/banner-03.png' },
+  { name: '虚拟人物 4', role: '虚拟主播', line: '准备好开始了吗？', image: './assets/banner-04.png' },
+  { name: '虚拟人物视频 5', role: '动态主播', line: '让我们开始对话吧', video: './assets/banner-05.mp4' },
+  { name: '虚拟人物视频 6', role: '动态主播', line: '我正在认真听', video: './assets/banner-06.mp4' },
 ];
 
 let activeSlideIndex = 0;
-let mediaSwitching = false;
+let galleryMuted = true;
+let dragStartX = null;
+let dragDistance = 0;
+let pressedCardIndex = null;
+let suppressClickUntil = 0;
+let activeAction = '';
+let activeEmotion = '';
+let carouselAutoplayTimer = null;
+
+const actionLabels = { wave: '挥手', nod: '点头', breathe: '自然呼吸', sway: '摇摆', jump: '跳跃' };
+const emotionLabels = { happy: '开心', calm: '平静', surprised: '惊喜', shy: '害羞', angry: '生气' };
+const actionClasses = Object.keys(actionLabels).map((action) => `action-${action}`);
+const emotionClasses = Object.keys(emotionLabels).map((emotion) => `emotion-${emotion}`);
+
+function syncPerformanceScrollButtons() {
+  const maxScroll = performanceTrack.scrollWidth - performanceTrack.clientWidth;
+  performancePrevious.disabled = performanceTrack.scrollLeft <= 10;
+  performanceNext.disabled = performanceTrack.scrollLeft >= maxScroll - 10;
+}
+
+function scrollPerformanceControls(direction) {
+  performanceTrack.scrollBy({ left: direction * performanceTrack.clientWidth, behavior: 'smooth' });
+}
+
+performancePrevious.addEventListener('click', () => scrollPerformanceControls(-1));
+performanceNext.addEventListener('click', () => scrollPerformanceControls(1));
+performanceTrack.addEventListener('scroll', syncPerformanceScrollButtons, { passive: true });
+performanceTrack.addEventListener('wheel', (event) => {
+  const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+  if (!delta) return;
+  event.preventDefault();
+  performanceTrack.scrollLeft += delta;
+}, { passive: false });
+window.addEventListener('resize', syncPerformanceScrollButtons);
 
 function syncHeaderTone() {
   topbar.classList.toggle('over-media', window.scrollY > 32);
@@ -62,204 +94,213 @@ themeToggle.addEventListener('click', () => {
 
 syncThemeToggle();
 
-function drawCurrentMediaSnapshot() {
-  const sourceIsVideo = !video.classList.contains('media-hidden') && video.readyState >= 2;
-  const source = sourceIsVideo ? video : hero;
-  const sourceWidth = sourceIsVideo ? video.videoWidth : hero.naturalWidth;
-  const sourceHeight = sourceIsVideo ? video.videoHeight : hero.naturalHeight;
-  if (!sourceWidth || !sourceHeight) return false;
+function normalizeSlideIndex(index) {
+  return (index + bannerSlides.length) % bannerSlides.length;
+}
 
-  const stageWidth = stage.clientWidth;
-  const stageHeight = stage.clientHeight;
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-  transitionCanvas.width = Math.round(stageWidth * pixelRatio);
-  transitionCanvas.height = Math.round(stageHeight * pixelRatio);
-  const context = transitionCanvas.getContext('2d');
-  context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-  context.clearRect(0, 0, stageWidth, stageHeight);
+function circularOffset(index) {
+  let offset = index - activeSlideIndex;
+  const midpoint = bannerSlides.length / 2;
+  if (offset > midpoint) offset -= bannerSlides.length;
+  if (offset < -midpoint) offset += bannerSlides.length;
+  return offset;
+}
 
-  const scale = Math.max(stageWidth / sourceWidth, stageHeight / sourceHeight);
-  const drawWidth = sourceWidth * scale;
-  const drawHeight = sourceHeight * scale;
-  const drawX = (stageWidth - drawWidth) / 2;
-  const drawY = (stageHeight - drawHeight) / 2;
+function syncMuteButton() {
+  if (!muteButton || !galleryCards.length) return;
+  const activeVideo = galleryCards[activeSlideIndex].querySelector('video');
+  muteButton.hidden = !activeVideo;
+  muteButton.classList.toggle('is-muted', galleryMuted);
+  muteButton.setAttribute('aria-pressed', String(galleryMuted));
+  muteButton.setAttribute('aria-label', galleryMuted ? '取消静音' : '静音');
+}
 
-  try {
-    context.drawImage(source, drawX, drawY, drawWidth, drawHeight);
-    transitionCanvas.className = 'media-transition is-visible';
-    return true;
-  } catch {
-    return false;
+function layoutBendingGallery() {
+  if (!stage || !galleryCards.length) return;
+  const width = stage.clientWidth;
+  const cardWidth = Math.min(450, Math.max(230, width * (width <= 760 ? 0.68 : 0.32)));
+  const gap = Math.min(cardWidth * 0.8, width * 0.265);
+
+  galleryCards.forEach((card, index) => {
+    const offset = circularOffset(index);
+    const distance = Math.abs(offset);
+    const isActive = distance === 0;
+    card.style.setProperty('--gallery-x', `${offset * gap}px`);
+    card.style.setProperty('--gallery-y', `${distance * 13}px`);
+    card.style.setProperty('--gallery-depth', `${distance * -145}px`);
+    card.style.setProperty('--gallery-rotate-y', `${offset * -24}deg`);
+    card.style.setProperty('--gallery-rotate-z', '0deg');
+    card.style.setProperty('--gallery-scale', String(1 - distance * 0.055));
+    card.style.setProperty('--gallery-opacity', String(distance > 3 ? 0 : 1 - distance * 0.2));
+    card.style.setProperty('--gallery-z', String(30 - distance));
+    card.style.pointerEvents = distance > 3 ? 'none' : 'auto';
+    card.classList.toggle('active', isActive);
+    card.setAttribute('aria-current', String(isActive));
+    card.setAttribute('aria-label', isActive ? `切换到${bannerSlides[normalizeSlideIndex(index + 1)].name}` : `选择${bannerSlides[index].name}`);
+    card.tabIndex = isActive ? 0 : -1;
+
+    const cardVideo = card.querySelector('video');
+    if (!cardVideo) return;
+    cardVideo.muted = isActive ? galleryMuted : true;
+    if (isActive) cardVideo.play().catch(() => {});
+    else cardVideo.pause();
+  });
+
+  syncMuteButton();
+}
+
+function syncPerformanceControls() {
+  actionControls.forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.action === activeAction));
+  });
+  emotionControls.forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.emotion === activeEmotion));
+  });
+}
+
+function clearPerformanceClasses() {
+  [...galleryCards, performanceTarget].filter(Boolean).forEach((card) => {
+    card.classList.remove(...actionClasses, ...emotionClasses);
+  });
+}
+
+function resetPerformanceControls() {
+  activeAction = '';
+  activeEmotion = '';
+  clearPerformanceClasses();
+  syncPerformanceControls();
+}
+
+function applyAction(action) {
+  const activeCard = galleryCards[activeSlideIndex] || performanceTarget;
+  if (!activeCard) return;
+  actionClasses.forEach((className) => activeCard.classList.remove(className));
+  activeAction = activeAction === action ? '' : action;
+  if (activeAction) {
+    void activeCard.offsetWidth;
+    activeCard.classList.add(`action-${activeAction}`);
+  }
+  syncPerformanceControls();
+}
+
+function applyEmotion(emotion) {
+  const activeCard = galleryCards[activeSlideIndex] || performanceTarget;
+  if (!activeCard) return;
+  emotionClasses.forEach((className) => activeCard.classList.remove(className));
+  activeEmotion = activeEmotion === emotion ? '' : emotion;
+  if (activeEmotion) activeCard.classList.add(`emotion-${activeEmotion}`);
+  syncPerformanceControls();
+}
+
+function selectSlide(nextIndex) {
+  const normalizedIndex = normalizeSlideIndex(nextIndex);
+  if (normalizedIndex !== activeSlideIndex) {
+    resetPerformanceControls();
+    activeSlideIndex = normalizedIndex;
+    layoutBendingGallery();
   }
 }
 
-function waitForMediaReady(target, eventName) {
-  const ready = target === video ? video.readyState >= 2 : hero.complete && hero.naturalWidth > 0;
-  if (ready) return Promise.resolve();
-  return new Promise((resolve) => {
-    const finish = () => {
-      window.clearTimeout(timeout);
-      target.removeEventListener(eventName, finish);
-      target.removeEventListener('error', finish);
-      resolve();
-    };
-    const timeout = window.setTimeout(finish, 1200);
-    target.addEventListener(eventName, finish, { once: true });
-    target.addEventListener('error', finish, { once: true });
+function stopCarouselAutoplay() {
+  window.clearInterval(carouselAutoplayTimer);
+  carouselAutoplayTimer = null;
+}
+
+function startCarouselAutoplay() {
+  stopCarouselAutoplay();
+  if (!gallery || !galleryCards.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  carouselAutoplayTimer = window.setInterval(() => selectSlide(activeSlideIndex + 1), 4200);
+}
+
+actionControls.forEach((button) => {
+  button.addEventListener('click', () => applyAction(button.dataset.action));
+});
+
+emotionControls.forEach((button) => {
+  button.addEventListener('click', () => applyEmotion(button.dataset.emotion));
+});
+
+galleryCards.forEach((card) => {
+  card.addEventListener('click', () => {
+    if (Date.now() < suppressClickUntil) return;
+    const cardIndex = Number(card.dataset.slide);
+    selectSlide(cardIndex === activeSlideIndex ? activeSlideIndex + 1 : cardIndex);
   });
-}
-
-function nextFrame() {
-  return new Promise((resolve) => window.requestAnimationFrame(resolve));
-}
-
-function syncBannerState() {
-  const slide = bannerSlides[activeSlideIndex];
-  bannerAvatarButtons.forEach((button, index) => {
-    const isActive = index === activeSlideIndex;
-    button.classList.toggle('active', isActive);
-    button.setAttribute('aria-pressed', String(isActive));
+  card.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    const cardIndex = Number(card.dataset.slide);
+    selectSlide(cardIndex === activeSlideIndex ? activeSlideIndex + 1 : cardIndex);
   });
-  video.setAttribute('aria-label', `${slide.name}演示视频`);
-  stage.setAttribute('aria-label', `${slide.name}视频 Banner`);
-}
+});
 
-async function selectSlide(nextIndex, direction = 'forward') {
-  if (mediaSwitching || nextIndex === activeSlideIndex) return;
-  mediaSwitching = true;
-  try {
-    const slide = bannerSlides[nextIndex];
-    const hasVideo = Boolean(slide.video);
-    const media = [hero, video];
-    const movingBackward = direction === 'backward';
+gallery?.addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowLeft') selectSlide(activeSlideIndex - 1);
+  else if (event.key === 'ArrowRight') selectSlide(activeSlideIndex + 1);
+  else return;
+  event.preventDefault();
+});
 
-    drawCurrentMediaSnapshot();
-    stage.classList.toggle('slide-backward', movingBackward);
-    activeSlideIndex = nextIndex;
-    syncBannerState();
-    await nextFrame();
+gallery?.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('.active-card-actions button')) return;
+  dragStartX = event.clientX;
+  dragDistance = 0;
+  const pressedCard = event.target.closest('.bending-card');
+  pressedCardIndex = event.target.closest('.active-card-actions')
+    ? activeSlideIndex
+    : pressedCard ? Number(pressedCard.dataset.slide) : null;
+  gallery.classList.add('is-dragging');
+  stopCarouselAutoplay();
+  gallery.setPointerCapture(event.pointerId);
+});
 
-    media.forEach((item) => item.classList.add('media-enter'));
-    video.pause();
-    if (hasVideo) {
-      video.src = slide.video;
-      video.load();
-    } else {
-      hero.src = slide.image;
-      hero.alt = `当前虚拟主播 ${slide.name}`;
-    }
+gallery?.addEventListener('pointermove', (event) => {
+  if (dragStartX === null) return;
+  dragDistance = event.clientX - dragStartX;
+  gallery.style.setProperty('--drag-offset', `${dragDistance * 0.22}px`);
+});
 
-    hero.classList.toggle('media-hidden', hasVideo);
-    video.classList.toggle('media-hidden', !hasVideo);
-    stage.classList.toggle('photo-mode', !hasVideo);
-    stage.classList.toggle('video-mode', hasVideo);
-    stage.classList.remove('video-playing');
-    speaking.textContent = slide.line;
-
-    await waitForMediaReady(hasVideo ? video : hero, hasVideo ? 'loadeddata' : 'load');
-    if (hasVideo && video.readyState >= 1) {
-      video.currentTime = 0.001;
-      video.play().then(() => stage.classList.add('video-playing')).catch(() => {});
-    }
-
-    void stage.offsetWidth;
-    transitionCanvas.classList.add('media-exit');
-    media.forEach((item) => item.classList.remove('media-enter'));
-    await new Promise((resolve) => window.setTimeout(resolve, 720));
-  } finally {
-    transitionCanvas.className = 'media-transition';
-    hero.classList.remove('media-enter');
-    video.classList.remove('media-enter');
-    mediaSwitching = false;
+function finishGalleryDrag(event) {
+  if (dragStartX === null) return;
+  if (gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId);
+  gallery.classList.remove('is-dragging');
+  gallery.style.setProperty('--drag-offset', '0px');
+  const wasCancelled = event.type === 'pointercancel';
+  if (!wasCancelled && Math.abs(dragDistance) > 42) {
+    suppressClickUntil = Date.now() + 300;
+    selectSlide(activeSlideIndex + (dragDistance < 0 ? 1 : -1));
+  } else if (!wasCancelled && pressedCardIndex !== null) {
+    suppressClickUntil = Date.now() + 300;
+    selectSlide(pressedCardIndex === activeSlideIndex ? activeSlideIndex + 1 : pressedCardIndex);
   }
+  dragStartX = null;
+  dragDistance = 0;
+  pressedCardIndex = null;
+  startCarouselAutoplay();
 }
 
-bannerAvatarButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const nextIndex = Number(button.dataset.slideIndex);
-    if (!Number.isInteger(nextIndex) || !bannerSlides[nextIndex]) return;
-    selectSlide(nextIndex, nextIndex < activeSlideIndex ? 'backward' : 'forward');
+gallery?.addEventListener('pointerup', finishGalleryDrag);
+gallery?.addEventListener('pointercancel', finishGalleryDrag);
+gallery?.addEventListener('dragstart', (event) => event.preventDefault());
+gallery?.addEventListener('mouseenter', stopCarouselAutoplay);
+gallery?.addEventListener('mouseleave', startCarouselAutoplay);
+gallery?.addEventListener('focusin', stopCarouselAutoplay);
+gallery?.addEventListener('focusout', (event) => {
+  if (!gallery.contains(event.relatedTarget)) startCarouselAutoplay();
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopCarouselAutoplay();
+  else startCarouselAutoplay();
+});
+
+galleryVideos.forEach((galleryVideo) => {
+  galleryVideo.addEventListener('loadedmetadata', () => {
+    if (galleryVideo.currentTime === 0) galleryVideo.currentTime = 0.001;
   });
 });
 
-performanceControls.forEach((button) => {
-  button.addEventListener('click', () => {
-    const groupSelector = button.dataset.action ? '[data-action]' : '[data-emotion]';
-    const shouldActivate = button.getAttribute('aria-pressed') !== 'true';
-
-    performanceControls
-      .filter((control) => control.matches(groupSelector))
-      .forEach((control) => {
-        const isSelected = shouldActivate && control === button;
-        control.classList.toggle('active', isSelected);
-        control.setAttribute('aria-pressed', String(isSelected));
-      });
-
-    try {
-      video.currentTime = 0;
-      video.play().then(() => stage.classList.add('video-playing')).catch(() => {});
-    } catch {
-      video.addEventListener('loadedmetadata', () => {
-        video.currentTime = 0;
-        video.play().then(() => stage.classList.add('video-playing')).catch(() => {});
-      }, { once: true });
-    }
-
-    const label = button.lastElementChild.textContent;
-    showToast(shouldActivate ? `已应用「${label}」效果` : `已关闭「${label}」效果`);
-  });
-});
-
-function updatePerformanceScrollButtons() {
-  const maximumScroll = performanceControlTrack.scrollHeight - performanceControlTrack.clientHeight;
-  performancePrevious.disabled = performanceControlTrack.scrollTop <= 2;
-  performanceNext.disabled = performanceControlTrack.scrollTop >= maximumScroll - 2;
-}
-
-performancePrevious.addEventListener('click', () => {
-  performanceControlTrack.scrollBy({ top: -performanceControlTrack.clientHeight * 0.72, behavior: 'smooth' });
-});
-
-performanceNext.addEventListener('click', () => {
-  performanceControlTrack.scrollBy({ top: performanceControlTrack.clientHeight * 0.72, behavior: 'smooth' });
-});
-
-performanceControlTrack.addEventListener('scroll', updatePerformanceScrollButtons, { passive: true });
-window.addEventListener('resize', updatePerformanceScrollButtons);
-window.requestAnimationFrame(updatePerformanceScrollButtons);
-
-let stageTiltAnimationFrame;
-
-function updateStageTilt(event) {
-  if (event.pointerType === 'touch') return;
-  window.cancelAnimationFrame(stageTiltAnimationFrame);
-  stageTiltAnimationFrame = window.requestAnimationFrame(() => {
-    const bounds = stage.getBoundingClientRect();
-    const xRatio = Math.min(Math.max((event.clientX - bounds.left) / bounds.width, 0), 1);
-    const yRatio = Math.min(Math.max((event.clientY - bounds.top) / bounds.height, 0), 1);
-    stage.style.setProperty('--tilt-x', `${((0.5 - yRatio) * 5).toFixed(2)}deg`);
-    stage.style.setProperty('--tilt-y', `${((xRatio - 0.5) * 6).toFixed(2)}deg`);
-    stage.style.setProperty('--light-x', `${(xRatio * 100).toFixed(1)}%`);
-    stage.style.setProperty('--light-y', `${(yRatio * 100).toFixed(1)}%`);
-    stage.classList.add('is-tilting');
-  });
-}
-
-function resetStageTilt() {
-  window.cancelAnimationFrame(stageTiltAnimationFrame);
-  stage.style.setProperty('--tilt-x', '0deg');
-  stage.style.setProperty('--tilt-y', '0deg');
-  stage.style.setProperty('--light-x', '50%');
-  stage.style.setProperty('--light-y', '50%');
-  stage.classList.remove('is-tilting');
-}
-
-stage.addEventListener('pointermove', updateStageTilt);
-stage.addEventListener('pointerleave', resetStageTilt);
-
-video.addEventListener('loadeddata', () => {
-  if (video.currentTime === 0) video.currentTime = 0.001;
-});
+window.addEventListener('resize', layoutBendingGallery);
 
 function showToast(message) {
   toast.textContent = message;
@@ -267,95 +308,7 @@ function showToast(message) {
   window.setTimeout(() => toast.classList.remove('show'), 2300);
 }
 
-let dialingFinishTimer;
-let callCloseTimer;
-let connectedCallActive = false;
-let embeddedCallLayout = '';
-
-function storeCallProfile(profile) {
-  try {
-    sessionStorage.setItem('realitaCallProfile', JSON.stringify(profile));
-  } catch {
-    sessionStorage.removeItem('realitaCallProfile');
-  }
-}
-
-function parkCallEmbed() {
-  connectedCallActive = false;
-  stage.classList.remove('is-in-call', 'is-floating-call');
-  callEmbed.classList.remove('is-floating');
-  embeddedCallLayout = '';
-}
-
-function setEmbeddedCallLayout(layout) {
-  if (embeddedCallLayout === layout) return;
-  embeddedCallLayout = layout;
-  callEmbed.contentWindow?.postMessage({ type: 'realita-call-layout', layout }, '*');
-}
-
-function mountCallInBanner() {
-  stage.classList.add('is-in-call');
-  stage.classList.remove('is-floating-call');
-  callEmbed.classList.remove('is-floating');
-  setEmbeddedCallLayout('banner');
-}
-
-function syncConnectedCallPlacement() {
-  if (!connectedCallActive) return;
-
-  const stageBottom = stage.getBoundingClientRect().bottom;
-  // Separate enter/exit thresholds prevent jitter near the banner edge.
-  const shouldFloat = stageBottom <= (callEmbed.classList.contains('is-floating') ? 120 : 88);
-
-  if (shouldFloat) {
-    stage.classList.remove('is-in-call');
-    stage.classList.add('is-floating-call');
-    callEmbed.classList.add('is-floating');
-    setEmbeddedCallLayout('floating');
-    return;
-  }
-
-  mountCallInBanner();
-}
-
-function closeInPageCall() {
-  window.clearTimeout(dialingFinishTimer);
-  window.clearTimeout(callCloseTimer);
-  parkCallEmbed();
-  callFlow.classList.remove('is-active', 'is-connecting', 'is-connected');
-  callButton.disabled = false;
-  callCloseTimer = window.setTimeout(() => {
-    if (!callFlow.classList.contains('is-active')) {
-      callEmbed.src = 'about:blank';
-      delete callEmbed.dataset.callPage;
-      callFlow.hidden = true;
-    }
-  }, 380);
-}
-
-function beginInPageCall(profile) {
-  if (connectedCallActive || callFlow.classList.contains('is-connecting')) return;
-  const dialDuration = 5000;
-  window.clearTimeout(callCloseTimer);
-  window.clearTimeout(dialingFinishTimer);
-  parkCallEmbed();
-  storeCallProfile(profile);
-  dialAvatar.src = profile.image || '';
-  dialName.textContent = profile.name;
-  callEmbed.src = 'about:blank';
-  callFlow.hidden = false;
-  callFlow.classList.remove('is-connected');
-  callFlow.classList.add('is-connecting');
-  callButton.disabled = true;
-  window.requestAnimationFrame(() => callFlow.classList.add('is-active'));
-
-  dialingFinishTimer = window.setTimeout(() => {
-    callEmbed.dataset.callPage = 'true';
-    callEmbed.src = `./call.html?embed=1&profile=${encodeURIComponent(JSON.stringify(profile))}`;
-  }, dialDuration);
-}
-
-callButton.addEventListener('click', () => {
+callButton?.addEventListener('click', () => {
   const slide = bannerSlides[activeSlideIndex];
   const profile = {
     name: slide.name,
@@ -364,81 +317,259 @@ callButton.addEventListener('click', () => {
     video: slide.video || '',
     image: slide.image || '',
   };
-  beginInPageCall(profile);
+  try {
+    sessionStorage.setItem('realitaCallProfile', JSON.stringify(profile));
+  } catch {
+    sessionStorage.removeItem('realitaCallProfile');
+  }
+  window.location.href = './call.html';
 });
 
-dialCancel.addEventListener('click', closeInPageCall);
-function completeInPageCall() {
-  if (
-    callFlow.classList.contains('is-connecting') &&
-    callEmbed.dataset.callPage === 'true' &&
-    callEmbed.getAttribute('src')?.startsWith('./call.html?embed=1')
-  ) {
-    callFlow.classList.remove('is-connecting');
-    callFlow.classList.add('is-connected');
-    connectedCallActive = true;
-    video.pause();
-    mountCallInBanner();
-    syncConnectedCallPlacement();
-  }
+muteButton?.addEventListener('click', () => {
+  galleryMuted = !galleryMuted;
+  const activeVideo = galleryCards[activeSlideIndex].querySelector('video');
+  if (activeVideo) activeVideo.muted = galleryMuted;
+  syncMuteButton();
+  showToast(galleryMuted ? '视频声音已静音' : '视频声音已开启');
+});
+
+let activeRecommendationFilter = 'all';
+
+function filterRecommendations() {
+  const query = recommendationSearch?.value.trim().toLowerCase() || '';
+  const cards = [...document.querySelectorAll('.recommendation-card')];
+  let visibleCount = 0;
+
+  cards.forEach((card) => {
+    const categories = card.dataset.category.split(' ');
+    const categoryMatches = activeRecommendationFilter === 'all' || categories.includes(activeRecommendationFilter);
+    const titleMatches = card.dataset.title.toLowerCase().includes(query);
+    const visible = categoryMatches && titleMatches;
+    card.hidden = !visible;
+    if (visible) visibleCount += 1;
+  });
+
+  recommendationEmpty.hidden = visibleCount > 0;
 }
-window.addEventListener('message', (event) => {
-  if (event.source !== callEmbed.contentWindow) return;
-  if (event.data?.type === 'realita-call-ready') {
-    completeInPageCall();
-    return;
-  }
-  if (event.data?.type === 'realita-call-media-error' && callFlow.classList.contains('is-connecting')) {
-    closeInPageCall();
-    showToast('视频加载失败，请重试');
-    return;
-  }
-  if (event.data?.type === 'realita-call-ended') {
-    closeInPageCall();
-    return;
-  }
-  if (event.data?.type === 'realita-call-scroll' && connectedCallActive && Number.isFinite(event.data.deltaY)) {
-    window.scrollBy({ top: event.data.deltaY, behavior: 'instant' });
-  }
-});
-window.addEventListener('scroll', syncConnectedCallPlacement, { passive: true });
-window.addEventListener('resize', syncConnectedCallPlacement);
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && (connectedCallActive || !callFlow.hidden)) closeInPageCall();
+
+document.querySelectorAll('.recommendation-tabs button').forEach((button) => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.recommendation-tabs button').forEach((item) => {
+      const selected = item === button;
+      item.classList.toggle('active', selected);
+      item.setAttribute('aria-selected', String(selected));
+    });
+    activeRecommendationFilter = button.dataset.filter;
+    filterRecommendations();
+  });
 });
 
-muteButton.addEventListener('click', () => {
-  video.muted = !video.muted;
-  const muted = video.muted;
-  muteButton.classList.toggle('is-muted', muted);
-  muteButton.setAttribute('aria-pressed', String(muted));
-  muteButton.setAttribute('aria-label', muted ? '取消静音' : '静音');
-  showToast(muted ? '视频声音已静音' : '视频声音已开启');
-});
-
-soundButton.addEventListener('click', () => {
-  soundButton.classList.toggle('muted');
-  soundButton.textContent = soundButton.classList.contains('muted') ? '×' : '⌁';
-});
+recommendationSearch?.addEventListener('input', filterRecommendations);
 
 function bindFavoriteButton(button) {
   if (button.dataset.favoriteBound === 'true') return;
   button.dataset.favoriteBound = 'true';
   button.addEventListener('click', () => {
-    const saved = button.classList.toggle('saved');
-    button.textContent = saved ? '♥' : '♡';
-    showToast(saved ? '已收藏这个虚拟人物' : '已取消收藏');
+    const selected = button.classList.toggle('saved');
+    const characterName = button.closest('.recommendation-card')?.querySelector('h3')?.textContent || '这个虚拟人物';
+    button.textContent = '↗';
+    button.setAttribute('aria-pressed', String(selected));
+    button.setAttribute('aria-label', selected ? `取消选择 ${characterName}` : `选择 ${characterName}`);
+    showToast(selected ? `已选择 ${characterName}` : `已取消选择 ${characterName}`);
   });
 }
 
-function openRecommendationCall(card) {
-  const image = card.querySelector('img');
+document.querySelectorAll('.recommendation-overlay button').forEach(bindFavoriteButton);
+
+const recommendationFeature = document.querySelector('.recommendation-feature');
+const featureMainColumn = document.querySelector('.recommendation-main-column');
+const featureMainCard = document.querySelector('.recommendation-card-main');
+const recommendationChatControl = document.querySelector('.recommendation-chat-control');
+const recommendationTitle = document.querySelector('#recommendationTitle');
+const recommendationHostIntro = document.querySelector('#recommendationHostIntro');
+const reducedCardMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let recommendationTiltFrame = null;
+let recommendationCardBounds = null;
+let recommendationTiltReturning = false;
+const recommendationTiltCurrent = {rotateX:0,rotateY:0,imageX:0,imageY:0,labelX:0,labelY:0,shineX:0,shineY:0};
+const recommendationTiltTarget = {...recommendationTiltCurrent};
+
+function updateFeaturedCard3d() {
+  let remaining = 0;
+  Object.keys(recommendationTiltCurrent).forEach((key) => {
+    recommendationTiltCurrent[key] += (recommendationTiltTarget[key] - recommendationTiltCurrent[key]) * .16;
+    remaining = Math.max(remaining, Math.abs(recommendationTiltTarget[key] - recommendationTiltCurrent[key]));
+  });
+
+  featureMainCard.style.setProperty('--card-rotate-x', `${recommendationTiltCurrent.rotateX.toFixed(2)}deg`);
+  featureMainCard.style.setProperty('--card-rotate-y', `${recommendationTiltCurrent.rotateY.toFixed(2)}deg`);
+  featureMainCard.style.setProperty('--card-image-x', `${recommendationTiltCurrent.imageX.toFixed(1)}px`);
+  featureMainCard.style.setProperty('--card-image-y', `${recommendationTiltCurrent.imageY.toFixed(1)}px`);
+  featureMainCard.style.setProperty('--card-label-x', `${recommendationTiltCurrent.labelX.toFixed(1)}px`);
+  featureMainCard.style.setProperty('--card-label-y', `${recommendationTiltCurrent.labelY.toFixed(1)}px`);
+  featureMainCard.style.setProperty('--card-shine-offset-x', `${recommendationTiltCurrent.shineX.toFixed(1)}px`);
+  featureMainCard.style.setProperty('--card-shine-offset-y', `${recommendationTiltCurrent.shineY.toFixed(1)}px`);
+
+  if (remaining > .08) {
+    recommendationTiltFrame = window.requestAnimationFrame(updateFeaturedCard3d);
+    return;
+  }
+
+  recommendationTiltFrame = null;
+  if (recommendationTiltReturning) resetFeaturedCard3d();
+}
+
+function queueFeaturedCard3d() {
+  if (!recommendationTiltFrame) recommendationTiltFrame = window.requestAnimationFrame(updateFeaturedCard3d);
+}
+
+function resetFeaturedCard3d() {
+  if (recommendationTiltFrame) window.cancelAnimationFrame(recommendationTiltFrame);
+  recommendationTiltFrame = null;
+  recommendationCardBounds = null;
+  recommendationTiltReturning = false;
+  Object.keys(recommendationTiltCurrent).forEach((key) => {
+    recommendationTiltCurrent[key] = 0;
+    recommendationTiltTarget[key] = 0;
+  });
+  featureMainCard.classList.remove('is-3d-active');
+  featureMainCard.style.removeProperty('--card-rotate-x');
+  featureMainCard.style.removeProperty('--card-rotate-y');
+  featureMainCard.style.removeProperty('--card-image-x');
+  featureMainCard.style.removeProperty('--card-image-y');
+  featureMainCard.style.removeProperty('--card-label-x');
+  featureMainCard.style.removeProperty('--card-label-y');
+  featureMainCard.style.removeProperty('--card-shine-offset-x');
+  featureMainCard.style.removeProperty('--card-shine-offset-y');
+}
+
+function releaseFeaturedCard3d() {
+  recommendationTiltReturning = true;
+  Object.keys(recommendationTiltTarget).forEach((key) => { recommendationTiltTarget[key] = 0; });
+  queueFeaturedCard3d();
+}
+
+function measureFeaturedCardBounds() {
+  const columnBounds = featureMainColumn.getBoundingClientRect();
+  const width = featureMainCard.offsetWidth;
+  const height = featureMainCard.offsetHeight;
+  return {
+    left: columnBounds.left,
+    top: columnBounds.top,
+    right: columnBounds.left + width,
+    bottom: columnBounds.top + height,
+    width,
+    height,
+  };
+}
+
+featureMainColumn.addEventListener('pointerenter', (event) => {
+  if (reducedCardMotion.matches || event.pointerType === 'touch') return;
+  recommendationCardBounds = measureFeaturedCardBounds();
+});
+
+featureMainColumn.addEventListener('pointermove', (event) => {
+  if (reducedCardMotion.matches || event.pointerType === 'touch' || featureMainCard.classList.contains('is-switching')) return;
+  const bounds = recommendationCardBounds || measureFeaturedCardBounds();
+  const isInsideCard = event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+  if (!isInsideCard) {
+    releaseFeaturedCard3d();
+    return;
+  }
+  const horizontal = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+  const vertical = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+  const offsetX = horizontal - .5;
+  const offsetY = vertical - .5;
+  recommendationTiltReturning = false;
+  featureMainCard.classList.add('is-3d-active');
+  recommendationTiltTarget.rotateX = -offsetY * 8;
+  recommendationTiltTarget.rotateY = offsetX * 10;
+  recommendationTiltTarget.imageX = -offsetX * 7;
+  recommendationTiltTarget.imageY = -offsetY * 6;
+  recommendationTiltTarget.labelX = offsetX * 12;
+  recommendationTiltTarget.labelY = offsetY * 10;
+  recommendationTiltTarget.shineX = offsetX * 130;
+  recommendationTiltTarget.shineY = offsetY * 96;
+  queueFeaturedCard3d();
+});
+
+featureMainColumn.addEventListener('pointerleave', releaseFeaturedCard3d);
+featureMainColumn.addEventListener('pointercancel', releaseFeaturedCard3d);
+
+function syncFeaturedProfile() {
+  const name = featureMainCard.querySelector('h3')?.textContent?.trim() || '主播';
+  const intro = featureMainCard.querySelector('.recommendation-overlay p')?.textContent?.trim() || '';
+  recommendationTitle.textContent = name;
+  recommendationHostIntro.textContent = intro;
+  recommendationChatControl?.setAttribute('aria-label', `与 ${name} 聊天`);
+}
+
+function syncFeatureCardLabels() {
+  document.querySelectorAll('.recommendation-card-mini').forEach((card) => {
+    const name = card.querySelector('h3')?.textContent || '该主播';
+    card.setAttribute('aria-label', `将 ${name} 切换为主图`);
+  });
+}
+
+function swapFeaturedCard(selectedCard) {
+  if (!selectedCard || selectedCard.classList.contains('is-switching')) return;
+  const selectedName = selectedCard.querySelector('h3')?.textContent || '该主播';
+  resetFeaturedCard3d();
+  featureMainCard.classList.add('is-switching');
+  selectedCard.classList.add('is-switching');
+
+  window.setTimeout(() => {
+    const mainChildren = [...featureMainCard.childNodes].filter((child) => child !== recommendationChatControl);
+    const selectedChildren = [...selectedCard.childNodes];
+    const mainCategory = featureMainCard.dataset.category;
+    const mainTitle = featureMainCard.dataset.title;
+
+    featureMainCard.replaceChildren(...selectedChildren, recommendationChatControl);
+    selectedCard.replaceChildren(...mainChildren);
+    featureMainCard.dataset.category = selectedCard.dataset.category;
+    featureMainCard.dataset.title = selectedCard.dataset.title;
+    selectedCard.dataset.category = mainCategory;
+    selectedCard.dataset.title = mainTitle;
+
+    syncFeaturedProfile();
+    featureMainCard.classList.remove('is-switching');
+    selectedCard.classList.remove('is-switching');
+    featureMainCard.classList.add('is-swap-entering');
+    selectedCard.classList.add('is-swap-entering');
+    syncFeatureCardLabels();
+    filterRecommendations();
+    showToast(`已切换至 ${selectedName}`);
+
+    window.setTimeout(() => {
+      featureMainCard.classList.remove('is-swap-entering');
+      selectedCard.classList.remove('is-swap-entering');
+    }, 580);
+  }, 210);
+}
+
+recommendationFeature.addEventListener('click', (event) => {
+  swapFeaturedCard(event.target.closest('.recommendation-card-mini'));
+});
+
+recommendationFeature.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  const selectedCard = event.target.closest('.recommendation-card-mini');
+  if (!selectedCard) return;
+  event.preventDefault();
+  swapFeaturedCard(selectedCard);
+});
+
+syncFeatureCardLabels();
+syncFeaturedProfile();
+
+recommendationChatControl?.addEventListener('click', () => {
+  const activeMedia = featureMainCard.querySelector('video, img');
   const profile = {
-    name: card.querySelector('h3')?.textContent?.trim() || '虚拟主播',
-    role: card.dataset.role || '推荐主播',
-    line: card.dataset.line || '你好，很高兴见到你。',
-    video: '',
-    image: image?.currentSrc || image?.src || '',
+    name: featureMainCard.querySelector('h3')?.textContent?.trim() || '主播',
+    role: 'Realita 主播',
+    line: featureMainCard.querySelector('.recommendation-overlay p')?.textContent?.trim() || '很高兴见到你',
+    video: activeMedia?.tagName === 'VIDEO' ? activeMedia.getAttribute('src') || '' : '',
+    image: activeMedia?.tagName === 'IMG' ? activeMedia.getAttribute('src') || '' : '',
   };
   try {
     sessionStorage.setItem('realitaCallProfile', JSON.stringify(profile));
@@ -446,24 +577,6 @@ function openRecommendationCall(card) {
     sessionStorage.removeItem('realitaCallProfile');
   }
   window.location.href = './call.html';
-}
-
-function bindRecommendationCall(button) {
-  if (button.dataset.callBound === 'true') return;
-  button.dataset.callBound = 'true';
-  button.addEventListener('click', () => openRecommendationCall(button.closest('.recommendation-card')));
-}
-
-function updateRecommendationChatButton(button) {
-  button.setAttribute('aria-label', (button.getAttribute('aria-label') || '聊天').replace('通话', '聊天'));
-  const labelNode = [...button.childNodes].find((node) => node.nodeType === 3);
-  if (labelNode) labelNode.nodeValue = '聊天 ';
-}
-
-document.querySelectorAll('.recommendation-favorite').forEach(bindFavoriteButton);
-document.querySelectorAll('.recommendation-chat-button').forEach((button) => {
-  updateRecommendationChatButton(button);
-  bindRecommendationCall(button);
 });
 
 function setUploadFeedback(message, isError = false) {
@@ -490,27 +603,30 @@ function useRecommendationImage(file) {
       customCard = document.createElement('article');
       customCard.className = 'recommendation-card custom-recommendation';
       customCard.dataset.category = 'custom';
-      customCard.dataset.role = '自定义主播';
-      customCard.dataset.line = '你好，这是你创建的专属虚拟主播。';
       customCard.innerHTML = `
         <img alt="我的自定义虚拟人物" />
         <div class="recommendation-overlay">
           <span>自定义</span>
           <div><h3>我的虚拟人物</h3><p>由本地图片创建</p></div>
-          <div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与我的虚拟人物通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏我的虚拟人物">♡</button></div>
+          <button type="button" aria-label="选择我的虚拟人物">↗</button>
         </div>`;
-      const displacedCard = recommendationGrid.querySelector('.recommendation-card:last-child');
-      if (displacedCard) displacedCard.hidden = true;
-      recommendationGrid.prepend(customCard);
-      bindFavoriteButton(customCard.querySelector('.recommendation-favorite'));
-      const chatButton = customCard.querySelector('.recommendation-chat-button');
-      updateRecommendationChatButton(chatButton);
-      bindRecommendationCall(chatButton);
+      const recommendationGrid = document.querySelector('#recommendationGrid');
+      recommendationGrid.hidden = false;
+      recommendationGrid.append(customCard);
+      bindFavoriteButton(customCard.querySelector('.recommendation-overlay button'));
     }
 
     customCard.dataset.title = `我的虚拟人物 ${file.name}`;
     customCard.querySelector('img').src = reader.result;
     setUploadFeedback(`已载入 ${file.name}`);
+    if (recommendationSearch) recommendationSearch.value = '';
+    const customFilterButton = document.querySelector('.recommendation-tabs button[data-filter="custom"]');
+    if (customFilterButton) {
+      customFilterButton.click();
+    } else {
+      activeRecommendationFilter = 'all';
+      filterRecommendations();
+    }
     showToast('图片已添加到自定义虚拟人物');
     recommendationUpload.value = '';
   });
@@ -538,5 +654,15 @@ recommendationUploadZone.addEventListener('drop', (event) => {
   useRecommendationImage(event.dataTransfer.files[0]);
 });
 
-video.play().then(() => stage.classList.add('video-playing')).catch(() => {});
-syncBannerState();
+if (presenceCallVideo) {
+  presenceCallVideo.addEventListener('mouseenter', () => {
+    if (!presenceCallVideo.ended) return;
+    presenceCallVideo.currentTime = 0;
+    presenceCallVideo.play().catch(() => {});
+  });
+}
+
+resetPerformanceControls();
+syncPerformanceScrollButtons();
+layoutBendingGallery();
+startCarouselAutoplay();
