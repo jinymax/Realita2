@@ -17,8 +17,8 @@
 @keyframes dial-aurora{from{background-position:50% 50%,50% 50%}to{background-position:350% 50%,350% 50%}}
 @media(prefers-reduced-motion:reduce){.dial-aurora::before{animation:none}}
 .dial-status-dots{display:inline-flex;align-items:center;gap:3px;margin-left:6px;letter-spacing:0}.dial-status-dots i{width:3px;height:3px;border-radius:50%;background:currentColor;animation:dial-status-dot 1s ease-in-out infinite}.dial-status-dots i:nth-child(2){animation-delay:.16s}.dial-status-dots i:nth-child(3){animation-delay:.32s}@keyframes dial-status-dot{0%,70%,100%{opacity:.25;transform:translateY(0)}35%{opacity:1;transform:translateY(-3px)}}
-.banner-performance-controls .performance-control:not(.active){background:rgba(207,219,235,.22)!important;box-shadow:0 7px 18px rgba(0,0,0,.16)!important}.banner-performance-controls .performance-control:not(.active):hover{border-color:rgba(255,255,255,.32);background:rgba(225,234,246,.34)!important;box-shadow:0 7px 18px rgba(0,0,0,.16)!important}
-.banner-performance-controls .performance-control{border:0!important}
+.banner-performance-controls .performance-control:not(.active){background:rgba(207,219,235,.34)!important;box-shadow:0 7px 18px rgba(0,0,0,.16)!important}.banner-performance-controls .performance-control:not(.active):hover{border-color:rgba(255,255,255,.42);background:rgba(225,234,246,.46)!important;box-shadow:0 7px 18px rgba(0,0,0,.16)!important}
+.banner-performance-controls .performance-control{border:1px solid rgba(255,255,255,.28)!important}
 
 :root {
   --bg: #070709;
