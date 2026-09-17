@@ -305,6 +305,7 @@ function storeCallProfile(profile) {
 function parkCallEmbed() {
   connectedCallActive = false;
   stage.classList.remove('is-in-call', 'is-floating-call');
+  callFlow.classList.remove('is-floating-call');
   callEmbed.classList.remove('is-floating');
   embeddedCallLayout = '';
 }
@@ -318,6 +319,7 @@ function setEmbeddedCallLayout(layout) {
 function mountCallInBanner() {
   stage.classList.add('is-in-call');
   stage.classList.remove('is-floating-call');
+  callFlow.classList.remove('is-floating-call');
   callEmbed.classList.remove('is-floating');
   setEmbeddedCallLayout('banner');
 }
@@ -332,6 +334,7 @@ function syncConnectedCallPlacement() {
   if (shouldFloat) {
     stage.classList.remove('is-in-call');
     stage.classList.add('is-floating-call');
+    callFlow.classList.add('is-floating-call');
     callEmbed.classList.add('is-floating');
     setEmbeddedCallLayout('floating');
     return;
