@@ -5,7 +5,6 @@ const speaking = document.querySelector('#nowSpeaking');
 const soundButton = document.querySelector('#soundToggle');
 const toast = document.querySelector('#toast');
 const callButton = document.querySelector('#callButton');
-const muteButton = document.querySelector('#muteButton');
 const topbar = document.querySelector('.topbar');
 const transitionCanvas = document.querySelector('#mediaTransition');
 const performanceControlTrack = document.querySelector('#performanceControlTrack');
@@ -428,15 +427,6 @@ window.addEventListener('scroll', syncConnectedCallPlacement, { passive: true })
 window.addEventListener('resize', syncConnectedCallPlacement);
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && (connectedCallActive || !callFlow.hidden)) closeInPageCall();
-});
-
-muteButton.addEventListener('click', () => {
-  video.muted = !video.muted;
-  const muted = video.muted;
-  muteButton.classList.toggle('is-muted', muted);
-  muteButton.setAttribute('aria-pressed', String(muted));
-  muteButton.setAttribute('aria-label', muted ? '取消静音' : '静音');
-  showToast(muted ? '视频声音已静音' : '视频声音已开启');
 });
 
 soundButton.addEventListener('click', () => {
