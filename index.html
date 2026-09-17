@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Realita 虚拟主播生成与直播首页" />
     <title>Realita — 让每个想法，都有自己的主播</title>
-    <link rel="stylesheet" href="./styles.css?v=214" />
+    <link rel="stylesheet" href="./styles.css?v=215" />
   </head>
   <body>
     <div class="aurora-background" aria-hidden="true">
@@ -63,13 +63,13 @@
           </button>
         </div>
         <div class="video-controls" aria-label="首屏展示控制">
-          <button class="video-control call-control" id="callButton" type="button" aria-pressed="false">
-            <span class="control-label">聊天</span>
-            <span class="control-icon" aria-hidden="true">
-              <svg viewBox="0 0 28 27" fill="none"><path d="M10.0737 0.970093C5.28773 1.50158 1.50651 5.27763 0.969848 10.0636" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391C1.58965 19.5047 -0.231621 20.1389 3.78156 24.1497C4.28408 24.5536 7.47686 29.4123 18.6974 18.1946C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703C20.638 -0.744844 20.0134 1.08568 16.847 4.25128C13.564 7.53484 19.5275 8.70893 14.3691 13.866Z" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </button>
-          <div class="stage-quick-controls" aria-label="风格和模式切换">
+          <div class="banner-control-dock">
+            <button class="video-control call-control" id="callButton" type="button" aria-pressed="false">
+              <span class="control-label">聊天</span>
+              <span class="control-icon" aria-hidden="true">
+                <svg viewBox="0 0 28 27" fill="none"><path d="M10.0737 0.970093C5.28773 1.50158 1.50651 5.27763 0.969848 10.0636" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391C1.58965 19.5047 -0.231621 20.1389 3.78156 24.1497C4.28408 24.5536 7.47686 29.4123 18.6974 18.1946C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703C20.638 -0.744844 20.0134 1.08568 16.847 4.25128C13.564 7.53484 19.5275 8.70893 14.3691 13.866Z" stroke="#262626" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
             <div class="stage-control-group" role="group" aria-label="风格切换">
               <div class="stage-control-segment">
                 <button class="stage-option active" type="button" data-stage-style="3d" aria-pressed="true">3D</button>
@@ -82,11 +82,11 @@
                 <button class="stage-option" type="button" data-stage-mode="companion" aria-pressed="false">陪伴</button>
               </div>
             </div>
+            <button class="stage-background-toggle" id="stageBackgroundToggle" type="button" aria-label="切换背景：极光">
+              <span>背景</span><strong id="stageBackgroundLabel">极光</strong>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+            </button>
           </div>
-          <button class="stage-background-toggle" id="stageBackgroundToggle" type="button" aria-label="切换背景：极光">
-            <span>背景</span><strong id="stageBackgroundLabel">极光</strong>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
-          </button>
         </div>
         <div class="stage-floor"></div>
         <div class="voice-card">
