@@ -6,7 +6,6 @@ const callStage = document.querySelector('#callStage');
 const profileName = document.querySelector('#profileName');
 const profileRole = document.querySelector('#profileRole');
 const profileAvatar = document.querySelector('#profileAvatar');
-const profileSwitcher = document.querySelector('#profileSwitcher');
 const chatProfileName = document.querySelector('#chatProfileName');
 const welcomeMessage = document.querySelector('#welcomeMessage');
 const remoteSound = document.querySelector('#remoteSound');
@@ -102,43 +101,6 @@ if (profile.video) {
   remoteVideoBackdrop.classList.add('is-hidden');
   remoteSound.hidden = true;
 }
-
-const switchableProfiles = [
-  { name: 'Realita 主播一', role: '虚拟主播', video: './assets/live-streamer-banner-female-v2.m4v', image: './assets/banner-avatar-01.png', line: '欢迎来到 Realita' },
-  { name: 'Realita 主播二', role: '虚拟主播', video: './assets/live-streamer-banner-02.m4v', image: './assets/banner-avatar-02.png', line: '欢迎来到 Realita' },
-];
-
-function switchCallProfile(nextProfile) {
-  const wasMuted = remoteVideo.muted;
-  profile = { ...defaultProfile, ...nextProfile };
-  profileName.textContent = profile.name;
-  profileRole.textContent = `${profile.role} · AI 视频对话`;
-  profileAvatar.src = profile.image;
-  chatProfileName.textContent = profile.name;
-  welcomeMessage.textContent = profile.line;
-  sessionStorage.setItem('realitaCallProfile', JSON.stringify(profile));
-
-  remoteImage.classList.add('is-hidden');
-  remoteImageBackdrop.classList.add('is-hidden');
-  remoteVideo.classList.remove('is-hidden');
-  remoteVideoBackdrop.classList.remove('is-hidden');
-  remoteSound.hidden = false;
-  remoteVideo.pause();
-  remoteVideoBackdrop.pause();
-  remoteVideo.src = profile.video;
-  remoteVideoBackdrop.src = profile.video;
-  remoteVideo.muted = wasMuted;
-  remoteVideoBackdrop.muted = true;
-  remoteVideo.play().catch(() => {});
-  remoteVideoBackdrop.play().catch(() => {});
-  showCallToast(`已切换至${profile.name}`);
-}
-
-profileSwitcher.addEventListener('click', () => {
-  const currentIndex = switchableProfiles.findIndex((item) => item.video === profile.video);
-  const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % switchableProfiles.length;
-  switchCallProfile(switchableProfiles[nextIndex]);
-});
 
 let elapsedSeconds = 0;
 const timer = window.setInterval(() => {

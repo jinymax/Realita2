@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#050607" />
     <meta name="description" content="Realita AI 数字人视频对话" />
     <title>Realita — 视频对话</title>
-    <link rel="stylesheet" href="./call.css?v=39" />
+    <link rel="stylesheet" href="./call.css?v=40" />
   </head>
   <body>
     <main class="call-stage" id="callStage">
@@ -53,11 +53,10 @@
           </svg>
           <span>Realita</span>
         </a>
-        <button class="call-identity" id="profileSwitcher" type="button" aria-label="切换主播" title="切换主播">
+        <div class="call-identity" aria-live="polite">
           <img class="call-identity-avatar" id="profileAvatar" src="./assets/banner-avatar-01.png" alt="当前主播头像" />
           <div><strong id="profileName">小鹿酱</strong><small id="profileRole">甜心主播 · AI 视频对话</small></div>
-          <span class="profile-switch-icon" aria-hidden="true">⇄</span>
-        </button>
+        </div>
         <button class="sound-chip" id="remoteSound" type="button" aria-label="开启声音" title="开启声音">
           <svg class="sound-off-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"></path><path d="m16 9 5 5M21 9l-5 5"></path></svg>
           <svg class="sound-on-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z"></path><path d="M15 9.5a4 4 0 0 1 0 5M18 7a7 7 0 0 1 0 10"></path></svg>
@@ -96,6 +95,6 @@
 
       <div class="call-toast" id="callToast" role="status" aria-live="polite"></div>
     </main>
-    <script src="./call.js?v=16"></script>
+    <script src="./call.js?v=17"></script>
   </body>
 </html>
