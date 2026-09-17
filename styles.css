@@ -3,7 +3,7 @@
 /* A connected call occupies the banner first, then becomes a compact window after the banner. */
 .topbar{z-index:140!important}
 .stage.is-in-call{background:#050607!important}
-.stage.is-in-call > :not(.call-embed):not(.call-flow){opacity:0!important;pointer-events:none!important}
+.stage.is-in-call > :not(.call-embed):not(.call-flow):not(.stage-settings-controls){opacity:0!important;pointer-events:none!important}
 .call-flow.is-connected{position:fixed;z-index:120;background:transparent;overflow:visible;pointer-events:none}
 .call-flow.is-connected .call-embed:not(.is-floating){position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;background:#050607;box-shadow:none;pointer-events:auto}
 .call-flow .call-embed{transition:none}
