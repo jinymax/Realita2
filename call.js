@@ -29,6 +29,7 @@ document.body.classList.toggle('is-banner-embed', isEmbeddedCall);
 window.addEventListener('message', (event) => {
   if (event.source !== window.parent || event.data?.type !== 'realita-call-layout') return;
   document.body.classList.toggle('is-banner-embed', event.data.layout === 'banner');
+  document.body.classList.toggle('is-floating-embed', event.data.layout === 'floating');
 });
 
 function syncRemoteMediaRatio(media) {

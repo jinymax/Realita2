@@ -376,7 +376,7 @@ function beginInPageCall(profile) {
 
   dialingFinishTimer = window.setTimeout(() => {
     callEmbed.dataset.callPage = 'true';
-    callEmbed.src = `./call.html?v=37&embed=1&profile=${encodeURIComponent(JSON.stringify(profile))}`;
+    callEmbed.src = `./call.html?v=38&embed=1&profile=${encodeURIComponent(JSON.stringify(profile))}`;
   }, dialDuration);
 }
 
@@ -397,7 +397,7 @@ function completeInPageCall() {
   if (
     callFlow.classList.contains('is-connecting') &&
     callEmbed.dataset.callPage === 'true' &&
-    callEmbed.getAttribute('src')?.startsWith('./call.html?v=37&embed=1')
+    callEmbed.getAttribute('src')?.startsWith('./call.html?v=38&embed=1')
   ) {
     callFlow.classList.remove('is-connecting');
     callFlow.classList.add('is-connected');
