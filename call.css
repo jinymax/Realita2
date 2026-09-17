@@ -24,7 +24,7 @@ button{color:inherit}
 /* The Banner uses its own audio controls, so keep the embedded header minimal. */
 body.is-banner-embed .call-header{grid-template-columns:1fr}
 body.is-banner-embed .call-brand,body.is-banner-embed .sound-chip{display:none}
-body.is-banner-embed .call-identity{position:absolute;top:84px;left:50%;justify-self:auto;transform:translateX(-50%)}
+body.is-banner-embed .call-identity{position:absolute;top:84px;left:clamp(24px,4vw,64px);justify-self:auto;transform:none}
 
 .local-preview{position:absolute;z-index:18;left:24px;top:92px;width:min(18vw,230px);aspect-ratio:4/3;overflow:hidden;border:1px solid rgba(255,255,255,.22);border-radius:18px;background:#17191b;box-shadow:0 18px 45px rgba(0,0,0,.38);transition:left .35s ease,opacity .25s ease,transform .25s ease}
 .local-preview.is-hidden{opacity:0;transform:translateY(-8px);pointer-events:none}
