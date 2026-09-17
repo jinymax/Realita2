@@ -6,7 +6,6 @@ const soundButton = document.querySelector('#soundToggle');
 const toast = document.querySelector('#toast');
 const callButton = document.querySelector('#callButton');
 const muteButton = document.querySelector('#muteButton');
-const themeToggle = document.querySelector('#themeToggle');
 const topbar = document.querySelector('.topbar');
 const transitionCanvas = document.querySelector('#mediaTransition');
 const performanceControlTrack = document.querySelector('#performanceControlTrack');
@@ -40,27 +39,6 @@ function syncHeaderTone() {
 window.addEventListener('scroll', syncHeaderTone, { passive: true });
 window.addEventListener('resize', syncHeaderTone);
 syncHeaderTone();
-
-function syncThemeToggle() {
-  const isLight = document.documentElement.dataset.theme === 'light';
-  themeToggle.setAttribute('aria-pressed', String(isLight));
-  themeToggle.setAttribute('aria-label', isLight ? '切换到深色模式' : '切换到浅色模式');
-  themeToggle.title = isLight ? '切换到深色模式' : '切换到浅色模式';
-}
-
-themeToggle.addEventListener('click', () => {
-  const nextTheme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
-  document.documentElement.dataset.theme = nextTheme;
-  try {
-    localStorage.setItem('realitaTheme', nextTheme);
-  } catch {
-    // 本地存储不可用时，主题仍在当前页面生效。
-  }
-  syncThemeToggle();
-  showToast(nextTheme === 'light' ? '已切换到浅色模式' : '已切换到深色模式');
-});
-
-syncThemeToggle();
 
 function drawCurrentMediaSnapshot() {
   const sourceIsVideo = !video.classList.contains('media-hidden') && video.readyState >= 2;

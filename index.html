@@ -5,14 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Realita 虚拟主播生成与直播首页" />
     <title>Realita — 让每个想法，都有自己的主播</title>
-    <script>
-      try {
-        document.documentElement.dataset.theme = localStorage.getItem('realitaTheme') === 'light' ? 'light' : 'dark';
-      } catch {
-        document.documentElement.dataset.theme = 'dark';
-      }
-    </script>
-    <link rel="stylesheet" href="./styles.css?v=210" />
+    <link rel="stylesheet" href="./styles.css?v=211" />
   </head>
   <body>
     <div class="aurora-background" aria-hidden="true">
@@ -41,15 +34,6 @@
         </a>
       </nav>
       <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换到浅色模式" aria-pressed="false" title="切换页面主题">
-          <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="3.5"></circle>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
-          </svg>
-          <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"></path>
-          </svg>
-        </button>
         <button class="signup-button" type="button">登录 / 注册</button>
       </div>
     </header>
