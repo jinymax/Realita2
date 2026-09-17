@@ -343,3 +343,9 @@ html[data-theme="light"] .case-card,html[data-theme="light"] .case-card-product{
 .stage-settings-controls{right:var(--page-edge)}
 .stage-settings-controls .stage-background-toggle{left:var(--page-edge)}
 @media(max-width:760px){:root{--page-edge:18px}.topbar{padding-left:var(--page-edge);padding-right:var(--page-edge)}.studio-shell{padding-left:var(--page-edge);padding-right:var(--page-edge)}.banner-avatar-switcher,.stage-quick-controls{left:var(--page-edge)}.banner-performance-controls,.stage-settings-controls{right:var(--page-edge)}.stage-settings-controls .stage-background-toggle{left:var(--page-edge)}}
+
+/* The homepage hero is full-bleed; other sections keep the shared gutter. */
+.studio-shell{max-width:none;padding-left:0;padding-right:0}
+.stage.banner-mode{border-left:0;border-right:0;border-radius:0}
+@media(max-width:1100px){.studio-shell{max-width:none;padding-left:0;padding-right:0}}
+@media(max-width:760px){.studio-shell{padding-left:0;padding-right:0}.stage.banner-mode{border-radius:0}}
