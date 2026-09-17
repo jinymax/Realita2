@@ -68,3 +68,10 @@ body.is-floating-embed .call-performance-panel{display:none}
 @keyframes input-in{from{opacity:0;transform:translateX(-10px) scaleX(.88)}to{opacity:1;transform:translateX(0) scaleX(1)}}
 @media(max-width:720px){.call-header{height:64px;padding:0 16px;grid-template-columns:1fr auto}.call-identity{display:none}.call-brand{font-size:16px}.sound-chip{position:static;width:32px;height:32px}.local-preview{top:76px;left:14px;width:130px;border-radius:14px}.call-performance-panel{right:12px}.call-performance-grid{grid-template-columns:repeat(2,40px);grid-auto-rows:40px;gap:5px}.call-performance-control{gap:1px;padding:3px;border-radius:10px;font-size:7px}.call-performance-icon{height:16px;font-size:15px}.chat-drawer{left:12px;top:50%;width:calc(100vw - 24px);height:270px;transform:translateY(-50%)}.messages{height:205px}.call-controls{gap:14px;padding-top:54px;padding-bottom:calc(32px + env(safe-area-inset-bottom))}.control-row{gap:9px}.round-control>span{width:48px;height:48px}.round-control svg{width:20px;height:20px}.chat-form{width:min(280px,calc(100vw - 82px))}.call-controls p{font-size:11px}}
 @media(max-height:650px){.call-controls{gap:10px;padding-top:40px}.round-control>span{width:44px;height:44px}.chat-drawer{top:50%;height:190px;transform:translateY(-50%)}.messages{height:132px}.call-controls p{display:none}}
+
+/* Match all call-page edge controls to the homepage navigation gutter. */
+:root{--page-edge:clamp(24px,4.4vw,72px)}
+.call-header{padding-left:var(--page-edge);padding-right:var(--page-edge)}
+body.is-banner-embed .call-identity,.local-preview,.chat-drawer{left:var(--page-edge)}
+.call-performance-panel{right:var(--page-edge)}
+@media(max-width:720px){:root{--page-edge:18px}.call-header{padding-left:var(--page-edge);padding-right:var(--page-edge)}.local-preview,.chat-drawer{left:var(--page-edge)}.chat-drawer{width:calc(100vw - (var(--page-edge) * 2))}.call-performance-panel{right:var(--page-edge)}}
