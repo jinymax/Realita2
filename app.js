@@ -23,6 +23,10 @@ const callEmbed = document.querySelector('#callEmbed');
 const dialAvatar = document.querySelector('#dialAvatar');
 const dialName = document.querySelector('#dialName');
 const dialCancel = document.querySelector('#dialCancel');
+const stageStyleOptions = [...document.querySelectorAll('[data-stage-style]')];
+const stageModeOptions = [...document.querySelectorAll('[data-stage-mode]')];
+const stageBackgroundToggle = document.querySelector('#stageBackgroundToggle');
+const stageBackgroundLabel = document.querySelector('#stageBackgroundLabel');
 
 const bannerSlides = [
   { name: 'Realita 主播一', role: '虚拟主播', video: './assets/live-streamer-banner-female-v2.m4v', image: './assets/banner-avatar-01.png', line: '欢迎来到 Realita' },
@@ -31,6 +35,12 @@ const bannerSlides = [
 
 let activeSlideIndex = 0;
 let mediaSwitching = false;
+const stageBackgrounds = [
+  { value: 'aurora', label: '极光' },
+  { value: 'midnight', label: '深夜' },
+  { value: 'sunset', label: '日落' },
+];
+let activeBackgroundIndex = 0;
 
 function syncHeaderTone() {
   topbar.classList.toggle('over-media', window.scrollY > 32);
@@ -39,6 +49,41 @@ function syncHeaderTone() {
 window.addEventListener('scroll', syncHeaderTone, { passive: true });
 window.addEventListener('resize', syncHeaderTone);
 syncHeaderTone();
+
+function setStageOption(options, activeOption, attribute, value) {
+  stage.dataset[attribute] = value;
+  options.forEach((option) => {
+    const isActive = option === activeOption;
+    option.classList.toggle('active', isActive);
+    option.setAttribute('aria-pressed', String(isActive));
+  });
+}
+
+stageStyleOptions.forEach((option) => {
+  option.addEventListener('click', () => {
+    const style = option.dataset.stageStyle;
+    setStageOption(stageStyleOptions, option, 'style', style);
+    showToast(`已切换为 ${style.toUpperCase()} 风格`);
+  });
+});
+
+stageModeOptions.forEach((option) => {
+  option.addEventListener('click', () => {
+    const mode = option.dataset.stageMode;
+    setStageOption(stageModeOptions, option, 'mode', mode);
+    speaking.textContent = mode === 'companion' ? '现在开始，陪你聊聊' : bannerSlides[activeSlideIndex].line;
+    showToast(`已切换为${mode === 'companion' ? '陪伴' : '直播'}模式`);
+  });
+});
+
+stageBackgroundToggle.addEventListener('click', () => {
+  activeBackgroundIndex = (activeBackgroundIndex + 1) % stageBackgrounds.length;
+  const background = stageBackgrounds[activeBackgroundIndex];
+  stage.dataset.background = background.value;
+  stageBackgroundLabel.textContent = background.label;
+  stageBackgroundToggle.setAttribute('aria-label', `切换背景：${background.label}`);
+  showToast(`背景已切换为${background.label}`);
+});
 
 function drawCurrentMediaSnapshot() {
   const sourceIsVideo = !video.classList.contains('media-hidden') && video.readyState >= 2;
@@ -132,7 +177,7 @@ async function selectSlide(nextIndex, direction = 'forward') {
     stage.classList.toggle('photo-mode', !hasVideo);
     stage.classList.toggle('video-mode', hasVideo);
     stage.classList.remove('video-playing');
-    speaking.textContent = slide.line;
+    speaking.textContent = stage.dataset.mode === 'companion' ? '现在开始，陪你聊聊' : slide.line;
 
     await waitForMediaReady(hasVideo ? video : hero, hasVideo ? 'loadeddata' : 'load');
     if (hasVideo && video.readyState >= 1) {

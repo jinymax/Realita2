@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Realita 虚拟主播生成与直播首页" />
     <title>Realita — 让每个想法，都有自己的主播</title>
-    <link rel="stylesheet" href="./styles.css?v=211" />
+    <link rel="stylesheet" href="./styles.css?v=212" />
   </head>
   <body>
     <div class="aurora-background" aria-hidden="true">
@@ -39,7 +39,7 @@
     </header>
 
     <main id="studio" class="studio-shell">
-      <section class="stage photo-mode video-mode banner-mode" id="liveStage" aria-label="虚拟主播视频 Banner">
+      <section class="stage photo-mode video-mode banner-mode" id="liveStage" data-style="3d" data-mode="live" data-background="aurora" aria-label="虚拟主播视频 Banner">
         <div class="stage-glow"></div>
         <div class="live-badge"><span></span> LIVE PREVIEW</div>
         <div class="stage-status">
@@ -60,6 +60,26 @@
           </button>
           <button class="banner-avatar-button" type="button" data-slide-index="1" aria-label="切换到主播二" aria-pressed="false">
             <img src="./assets/banner-avatar-02.png" alt="主播二头像" />
+          </button>
+        </div>
+        <div class="stage-quick-controls" aria-label="首屏展示设置">
+          <div class="stage-control-group" role="group" aria-label="风格切换">
+            <span class="stage-control-title">风格</span>
+            <div class="stage-control-segment">
+              <button class="stage-option active" type="button" data-stage-style="3d" aria-pressed="true">3D</button>
+              <button class="stage-option" type="button" data-stage-style="2d" aria-pressed="false">2D</button>
+            </div>
+          </div>
+          <div class="stage-control-group" role="group" aria-label="模式切换">
+            <span class="stage-control-title">模式</span>
+            <div class="stage-control-segment">
+              <button class="stage-option active" type="button" data-stage-mode="live" aria-pressed="true">直播</button>
+              <button class="stage-option" type="button" data-stage-mode="companion" aria-pressed="false">陪伴</button>
+            </div>
+          </div>
+          <button class="stage-background-toggle" id="stageBackgroundToggle" type="button" aria-label="切换背景：极光">
+            <span>背景</span><strong id="stageBackgroundLabel">极光</strong>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
           </button>
         </div>
         <div class="video-controls" aria-label="视频通话控制">
