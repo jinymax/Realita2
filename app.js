@@ -12,8 +12,9 @@ const performancePrevious = document.querySelector('#performancePrevious');
 const performanceNext = document.querySelector('#performanceNext');
 const performanceControls = [...document.querySelectorAll('.performance-control')];
 const bannerAvatarButtons = [...document.querySelectorAll('.banner-avatar-button')];
-const recommendationGrid = document.querySelector('#recommendationGrid');
-const recommendationEmpty = document.querySelector('#recommendationEmpty');
+const characterTrack = document.querySelector('#characterTrack');
+const characterPrevious = document.querySelector('#characterPrevious');
+const characterNext = document.querySelector('#characterNext');
 const callFlow = document.querySelector('#callFlow');
 const callEmbed = document.querySelector('#callEmbed');
 const dialAvatar = document.querySelector('#dialAvatar');
@@ -434,23 +435,14 @@ soundButton.addEventListener('click', () => {
   soundButton.textContent = soundButton.classList.contains('muted') ? '×' : '⌁';
 });
 
-function bindFavoriteButton(button) {
-  if (button.dataset.favoriteBound === 'true') return;
-  button.dataset.favoriteBound = 'true';
-  button.addEventListener('click', () => {
-    const saved = button.classList.toggle('saved');
-    button.textContent = saved ? '♥' : '♡';
-    showToast(saved ? '已收藏这个虚拟人物' : '已取消收藏');
-  });
-}
-
 function openRecommendationCall(card) {
   const image = card.querySelector('img');
+  const previewVideo = card.querySelector('video');
   const profile = {
-    name: card.querySelector('h3')?.textContent?.trim() || '虚拟主播',
-    role: card.dataset.role || '推荐主播',
+    name: card.dataset.name || card.querySelector('h3')?.textContent?.trim() || '虚拟主播',
+    role: card.dataset.role || '实时互动角色',
     line: card.dataset.line || '你好，很高兴见到你。',
-    video: '',
+    video: card.dataset.video || previewVideo?.currentSrc || previewVideo?.src || '',
     image: image?.currentSrc || image?.src || '',
   };
   try {
@@ -461,23 +453,60 @@ function openRecommendationCall(card) {
   window.location.href = './call.html';
 }
 
-function bindRecommendationCall(button) {
-  if (button.dataset.callBound === 'true') return;
-  button.dataset.callBound = 'true';
-  button.addEventListener('click', () => openRecommendationCall(button.closest('.recommendation-card')));
-}
-
-function updateRecommendationChatButton(button) {
-  button.setAttribute('aria-label', (button.getAttribute('aria-label') || '聊天').replace('通话', '聊天'));
-  const labelNode = [...button.childNodes].find((node) => node.nodeType === 3);
-  if (labelNode) labelNode.nodeValue = '聊天 ';
-}
-
-document.querySelectorAll('.recommendation-favorite').forEach(bindFavoriteButton);
-document.querySelectorAll('.recommendation-chat-button').forEach((button) => {
-  updateRecommendationChatButton(button);
-  bindRecommendationCall(button);
+document.querySelectorAll('.character-chat-button').forEach((button) => {
+  button.addEventListener('click', () => openRecommendationCall(button.closest('.character-card')));
 });
+
+function updateCharacterNavigation() {
+  const maxScroll = characterTrack.scrollWidth - characterTrack.clientWidth;
+  characterPrevious.disabled = characterTrack.scrollLeft <= 4;
+  characterNext.disabled = characterTrack.scrollLeft >= maxScroll - 4;
+}
+
+function scrollCharacters(direction) {
+  const card = characterTrack.querySelector('.character-card');
+  if (!card) return;
+  const gap = parseFloat(getComputedStyle(characterTrack).gap) || 0;
+  characterTrack.scrollBy({ left: direction * (card.getBoundingClientRect().width + gap), behavior: 'smooth' });
+}
+
+characterPrevious.addEventListener('click', () => scrollCharacters(-1));
+characterNext.addEventListener('click', () => scrollCharacters(1));
+characterTrack.addEventListener('scroll', updateCharacterNavigation, { passive: true });
+window.addEventListener('resize', updateCharacterNavigation);
+updateCharacterNavigation();
+
+let characterDrag = null;
+characterTrack.addEventListener('pointerdown', (event) => {
+  if (event.pointerType !== 'mouse' || event.target.closest('button')) return;
+  characterDrag = { x: event.clientX, scrollLeft: characterTrack.scrollLeft };
+  characterTrack.setPointerCapture(event.pointerId);
+  characterTrack.classList.add('is-dragging');
+});
+characterTrack.addEventListener('pointermove', (event) => {
+  if (!characterDrag) return;
+  characterTrack.scrollLeft = characterDrag.scrollLeft - (event.clientX - characterDrag.x);
+});
+function finishCharacterDrag() {
+  characterDrag = null;
+  characterTrack.classList.remove('is-dragging');
+  updateCharacterNavigation();
+}
+characterTrack.addEventListener('pointerup', finishCharacterDrag);
+characterTrack.addEventListener('pointercancel', finishCharacterDrag);
+
+const characterVideos = [...document.querySelectorAll('.character-video')];
+if ('IntersectionObserver' in window) {
+  const characterVideoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (isIntersecting) target.play().catch(() => {});
+      else target.pause();
+    });
+  }, { threshold: 0.25 });
+  characterVideos.forEach((previewVideo) => characterVideoObserver.observe(previewVideo));
+} else {
+  characterVideos.slice(0, 3).forEach((previewVideo) => previewVideo.play().catch(() => {}));
+}
 
 video.play().then(() => stage.classList.add('video-playing')).catch(() => {});
 syncBannerState();

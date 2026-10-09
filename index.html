@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Realita 虚拟主播生成与直播首页" />
     <title>Realita — 让每个想法，都有自己的主播</title>
-    <link rel="stylesheet" href="./styles.css?v=232" />
+    <link rel="stylesheet" href="./styles.css?v=233" />
   </head>
   <body>
     <div class="aurora-background" aria-hidden="true">
@@ -129,30 +129,98 @@
 
   </main>
 
-    <section id="showcase" class="recommendations" aria-label="虚拟主播推荐与自定义上传">
-      <div class="recommendation-grid" id="recommendationGrid">
-        <article class="recommendation-card" data-category="popular companion" data-title="Luo 灵境旅人" data-role="东方幻想主播" data-line="你好，我是 Luo，很高兴在这里见到你。">
-          <img src="./assets/recommendations/avatar-luo-fantasy.png" alt="Luo 东方幻想虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>幻想</span><div><h3>Luo</h3><p>灵境旅人 · 东方幻想</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Luo 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Luo">♡</button></div></div>
+    <section id="showcase" class="characters" aria-labelledby="charactersTitle">
+      <div class="characters-head">
+        <div class="characters-copy">
+          <span class="characters-number">04 — 角色</span>
+          <h2 id="charactersTitle">人物</h2>
+          <p>每个 Realita 角色都有独特的声音和个性。滑动浏览，找到你喜欢的角色，开始实时对话。</p>
+        </div>
+        <div class="characters-nav" aria-label="浏览角色">
+          <button id="characterPrevious" type="button" aria-label="上一位角色" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button id="characterNext" type="button" aria-label="下一位角色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <div class="characters-track" id="characterTrack" tabindex="0" aria-label="角色列表">
+        <article class="character-card" data-name="Rio" data-role="实时互动角色" data-line="你好，我是 Rio，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/rio-dP5STv1EhYriscoK.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/rio-dP5STv1EhYriscoK.mp4" muted loop playsinline preload="metadata" aria-label="Rio 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>01 / REALITA</small><h3>Rio</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Rio 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
         </article>
-        <article class="recommendation-card" data-category="business" data-title="Noah 专业顾问" data-role="专业顾问" data-line="你好，我是 Noah，随时准备和你深入交流。">
-          <img src="./assets/recommendations/avatar-buddy-golden-retriever-v2.png" alt="Noah 专业顾问虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>商务</span><div><h3>Noah</h3><p>专业顾问 · 清晰表达</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Noah 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Noah">♡</button></div></div>
+        <article class="character-card" data-name="Yuki" data-role="实时互动角色" data-line="你好，我是 Yuki，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/yuki-CfcICy5QjSrUVq1Q.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/yuki-CfcICy5QjSrUVq1Q.mp4" muted loop playsinline preload="metadata" aria-label="Yuki 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>02 / REALITA</small><h3>Yuki</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Yuki 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
         </article>
-        <article class="recommendation-card" data-category="companion" data-title="Evan 日常陪伴" data-role="日常陪伴" data-line="你好，我是 Evan，今天想聊些什么？">
-          <img src="./assets/recommendations/73c0b650-0c5f-419c-855d-5a3f532906ba.png" alt="Evan 日常陪伴虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>新面孔</span><div><h3>Evan</h3><p>日常陪伴 · 轻松聊天</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Evan 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Evan">♡</button></div></div>
+        <article class="character-card" data-name="Sena" data-role="实时互动角色" data-line="你好，我是 Sena，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/sena-OuVgI9GfibVWmN6n.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/sena-OuVgI9GfibVWmN6n.mp4" muted loop playsinline preload="metadata" aria-label="Sena 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>03 / REALITA</small><h3>Sena</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Sena 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
         </article>
-        <article class="recommendation-card" data-category="business popular" data-title="Ranger 机械牛仔" data-role="机械牛仔" data-line="嘿，旅行者。Ranger 已准备好与你对话。">
-          <img src="./assets/recommendations/avatar-ranger-robot.png" alt="Ranger 机械牛仔虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>智能</span><div><h3>Ranger</h3><p>机械牛仔 · 趣味互动</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Ranger 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Ranger">♡</button></div></div>
+        <article class="character-card" data-name="Mio" data-role="实时互动角色" data-line="你好，我是 Mio，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/mio-9xUpiEhxBnccAjnI.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/mio-9xUpiEhxBnccAjnI.mp4" muted loop playsinline preload="metadata" aria-label="Mio 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>04 / REALITA</small><h3>Mio</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Mio 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
         </article>
-        <article class="recommendation-card" data-category="companion popular" data-title="Chloe 治愈陪伴" data-role="治愈陪伴" data-line="你好，我是 Chloe，陪你轻松聊一会儿。">
-          <img src="./assets/recommendations/15fc34fc-69b7-476e-8416-21f001df73c9.png" alt="Chloe 治愈陪伴虚拟人物" loading="lazy" />
-          <div class="recommendation-overlay"><span>精选</span><div><h3>Chloe</h3><p>治愈陪伴 · 多语交流</p></div><div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与 Chloe 通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏 Chloe">♡</button></div></div>
+        <article class="character-card" data-name="Luna" data-role="实时互动角色" data-line="你好，我是 Luna，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/luna-IjcZlr0S1dcWg0cW.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/luna-IjcZlr0S1dcWg0cW.mp4" muted loop playsinline preload="metadata" aria-label="Luna 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>05 / REALITA</small><h3>Luna</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Luna 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
+        </article>
+        <article class="character-card" data-name="Aya" data-role="实时互动角色" data-line="你好，我是 Aya，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/aya-HGlJBriFpCKvPNZy.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/aya-HGlJBriFpCKvPNZy.mp4" muted loop playsinline preload="metadata" aria-label="Aya 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>06 / REALITA</small><h3>Aya</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Aya 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
+        </article>
+        <article class="character-card" data-name="Rei" data-role="实时互动角色" data-line="你好，我是 Rei，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/rei-p0ToYysWTnOOnaSv.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/rei-p0ToYysWTnOOnaSv.mp4" muted loop playsinline preload="metadata" aria-label="Rei 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>07 / REALITA</small><h3>Rei</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Rei 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
+        </article>
+        <article class="character-card" data-name="Nao" data-role="实时互动角色" data-line="你好，我是 Nao，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/nao-ZXYkl89sI4FoWmuM.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/nao-ZXYkl89sI4FoWmuM.mp4" muted loop playsinline preload="metadata" aria-label="Nao 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>08 / REALITA</small><h3>Nao</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Nao 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
+        </article>
+        <article class="character-card" data-name="Kira" data-role="实时互动角色" data-line="你好，我是 Kira，很高兴认识你。" data-video="https://valle.cf.vidy.chat/valle/valle/kira-c6PnW3D3wSKg5uQl.mp4">
+          <video class="character-video" src="https://valle.cf.vidy.chat/valle/valle/kira-c6PnW3D3wSKg5uQl.mp4" muted loop playsinline preload="metadata" aria-label="Kira 角色演示视频"></video>
+          <div class="character-shade" aria-hidden="true"></div>
+          <span class="character-live"><i aria-hidden="true"></i>在线</span>
+          <div class="character-card-info"><small>09 / REALITA</small><h3>Kira</h3></div>
+          <button class="character-chat-button" type="button" aria-label="与 Kira 聊天"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg><span>立即聊天</span></button>
         </article>
       </div>
-      <p class="recommendation-empty" id="recommendationEmpty" hidden>暂时没有匹配的人物，换个关键词试试。</p>
+      <p class="characters-hint"><span aria-hidden="true">↔</span> 拖动或使用箭头浏览所有角色</p>
+      <div class="create-feature" aria-labelledby="createFeatureTitle">
+        <div class="create-feature-copy">
+          <span class="characters-number">05 — 自定义</span>
+          <h2 id="createFeatureTitle">打造你的专属伴侣</h2>
+          <p>选择风格、上传照片，让独特的角色栩栩如生，陪你自然地交流。</p>
+        </div>
+        <div class="create-shots">
+          <figure class="create-shot"><img src="https://valle.cf.vidy.chat/valle/valle/style-HOxHR1bTX0LNkspZ.webp" alt="选择一种风格" loading="lazy" /><figcaption>01 / 选择一种风格</figcaption></figure>
+          <figure class="create-shot"><img src="https://valle.cf.vidy.chat/valle/valle/upload-DJwmtXVTTKQAa82F.webp" alt="上传照片" loading="lazy" /><figcaption>02 / 上传照片</figcaption></figure>
+          <figure class="create-shot"><img src="https://valle.cf.vidy.chat/valle/valle/bring-to-life-2npbMMo3EzSwK7yW.webp" alt="让角色栩栩如生" loading="lazy" /><figcaption>03 / 让角色栩栩如生</figcaption></figure>
+          <figure class="create-shot"><img src="https://valle.cf.vidy.chat/valle/valle/chat-d2ErABLQClOpRW39.webp" alt="与角色聊天" loading="lazy" /><figcaption>04 / 与角色聊天</figcaption></figure>
+          <figure class="create-shot"><img src="https://valle.cf.vidy.chat/valle/valle/ready-zsMIDR2PgtGV9Zdu.webp" alt="角色准备就绪" loading="lazy" /><figcaption>05 / 角色准备就绪</figcaption></figure>
+        </div>
+      </div>
     </section>
 
     <section class="realtime-feature" id="video" aria-labelledby="realtimeFeatureTitle">
@@ -304,6 +372,6 @@
       <iframe class="call-embed" id="callEmbed" title="Realita 视频通话" allow="autoplay; camera; microphone"></iframe>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./app.js?v=62"></script>
+    <script src="./app.js?v=63"></script>
   </body>
 </html>
