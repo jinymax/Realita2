@@ -341,10 +341,11 @@ html[data-theme="light"] .case-card,html[data-theme="light"] .case-card-product{
 @media(max-width:1100px){.studio-shell{max-width:none;padding-left:0;padding-right:0}}
 @media(max-width:760px){.studio-shell{padding-left:0;padding-right:0}.stage.banner-mode{border-radius:0}}
 
-/* Reveal the homepage chat action only when the hero is being explored. */
-.stage.banner-mode .call-control{opacity:0;pointer-events:none;transform:translateY(8px)}
-.stage.banner-mode:hover .call-control,.stage.banner-mode:focus-within .call-control{opacity:1;pointer-events:auto;transform:translateY(0)}
+/* Keep the homepage experience action visible above the lower edge. */
+.stage.banner-mode .video-controls{bottom:76px}
+.stage.banner-mode .call-control{opacity:1;pointer-events:auto;transform:none}
 .stage.banner-mode:hover .call-control:hover{transform:scale(1.08)}
+@media(max-width:760px){.stage.banner-mode .video-controls{bottom:64px}}
 
 /* LiveTime feature replacing the former character upload section. */
 .realtime-feature{position:relative;z-index:1;width:calc(100% - clamp(48px,8.8vw,144px));max-width:1280px;margin:40px auto 112px;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.95fr);align-items:center;gap:clamp(42px,7vw,112px);scroll-margin-top:100px}
