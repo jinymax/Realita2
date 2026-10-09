@@ -347,7 +347,7 @@ html[data-theme="light"] .case-card,html[data-theme="light"] .case-card-product{
 .stage.banner-mode .call-control .control-label{font-size:14px;font-weight:400}
 .stage.banner-mode .call-control{border:.5px solid rgba(255,255,255,.96);background:#fff;color:#101214;opacity:1;pointer-events:auto;transform:none;box-shadow:0 10px 28px rgba(0,0,0,.2)}
 .stage.banner-mode .call-control:disabled{opacity:.55}
-.stage.banner-mode .banner-more-button{border:.5px solid rgba(255,255,255,.42);background:rgba(7,10,14,.28);color:#fff;pointer-events:auto;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%);box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.stage.banner-mode .banner-more-button{border:.5px solid rgba(255,255,255,.42);background:transparent;color:#fff;pointer-events:auto;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%);box-shadow:0 10px 28px rgba(0,0,0,.14)}
 .stage.banner-mode .call-control:hover,.stage.banner-mode .banner-more-button:hover{transform:translateY(-2px)}
 .stage.banner-mode .banner-more-button:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.14)}
 @media(max-width:760px){.stage.banner-mode .video-controls{bottom:64px;gap:8px}.stage.banner-mode .call-control,.stage.banner-mode .banner-more-button{min-width:96px;height:40px;padding:0 16px;font-size:14px}}
