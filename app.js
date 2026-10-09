@@ -43,8 +43,17 @@ function syncHeaderTone() {
   topbar.classList.toggle('over-media', window.scrollY > 32);
 }
 
-window.addEventListener('scroll', syncHeaderTone, { passive: true });
-window.addEventListener('resize', syncHeaderTone);
+let headerToneFrame = 0;
+function scheduleHeaderToneSync() {
+  if (headerToneFrame) return;
+  headerToneFrame = window.requestAnimationFrame(() => {
+    headerToneFrame = 0;
+    syncHeaderTone();
+  });
+}
+
+window.addEventListener('scroll', scheduleHeaderToneSync, { passive: true });
+window.addEventListener('resize', scheduleHeaderToneSync);
 syncHeaderTone();
 
 function setStageOption(options, activeOption, attribute, value) {
@@ -291,6 +300,7 @@ let dialingFinishTimer;
 let callCloseTimer;
 let connectedCallActive = false;
 let embeddedCallLayout = '';
+let callPlacementFrame = 0;
 
 function storeCallProfile(profile) {
   try {
@@ -301,6 +311,8 @@ function storeCallProfile(profile) {
 }
 
 function parkCallEmbed() {
+  window.cancelAnimationFrame(callPlacementFrame);
+  callPlacementFrame = 0;
   connectedCallActive = false;
   stage.classList.remove('is-in-call', 'is-floating-call');
   callFlow.classList.remove('is-floating-call');
@@ -326,8 +338,13 @@ function syncConnectedCallPlacement() {
   if (!connectedCallActive) return;
 
   const stageBottom = stage.getBoundingClientRect().bottom;
+  const isFloating = callEmbed.classList.contains('is-floating');
   // Separate enter/exit thresholds prevent jitter near the banner edge.
-  const shouldFloat = stageBottom <= (callEmbed.classList.contains('is-floating') ? 120 : 88);
+  const shouldFloat = stageBottom <= (isFloating ? 120 : 88);
+
+  // Avoid touching the iframe on every scroll event. Resizing an embedded
+  // video frame repeatedly can briefly clear its compositor surface.
+  if (shouldFloat === isFloating) return;
 
   if (shouldFloat) {
     stage.classList.remove('is-in-call');
@@ -339,6 +356,14 @@ function syncConnectedCallPlacement() {
   }
 
   mountCallInBanner();
+}
+
+function scheduleConnectedCallPlacement() {
+  if (!connectedCallActive || callPlacementFrame) return;
+  callPlacementFrame = window.requestAnimationFrame(() => {
+    callPlacementFrame = 0;
+    syncConnectedCallPlacement();
+  });
 }
 
 function closeInPageCall() {
@@ -424,8 +449,8 @@ window.addEventListener('message', (event) => {
     window.scrollBy({ top: event.data.deltaY, behavior: 'instant' });
   }
 });
-window.addEventListener('scroll', syncConnectedCallPlacement, { passive: true });
-window.addEventListener('resize', syncConnectedCallPlacement);
+window.addEventListener('scroll', scheduleConnectedCallPlacement, { passive: true });
+window.addEventListener('resize', scheduleConnectedCallPlacement);
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && (connectedCallActive || !callFlow.hidden)) closeInPageCall();
 });
