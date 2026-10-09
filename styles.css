@@ -342,10 +342,14 @@ html[data-theme="light"] .case-card,html[data-theme="light"] .case-card-product{
 @media(max-width:760px){.studio-shell{padding-left:0;padding-right:0}.stage.banner-mode{border-radius:0}}
 
 /* Keep the homepage experience action visible above the lower edge. */
-.stage.banner-mode .video-controls{bottom:76px}
-.stage.banner-mode .call-control{opacity:1;pointer-events:auto;transform:none}
-.stage.banner-mode:hover .call-control:hover{transform:scale(1.08)}
-@media(max-width:760px){.stage.banner-mode .video-controls{bottom:64px}}
+.stage.banner-mode .video-controls{bottom:76px;gap:12px;pointer-events:auto}
+.stage.banner-mode .call-control,.stage.banner-mode .banner-more-button{box-sizing:border-box;width:auto;min-width:120px;height:48px;display:flex;align-items:center;justify-content:center;padding:0 25px;border-radius:999px;font-size:16px;font-weight:600;line-height:1;text-decoration:none;letter-spacing:.01em;transition:transform .22s ease,background .22s ease,border-color .22s ease}
+.stage.banner-mode .call-control{border:1px solid rgba(255,255,255,.96);background:#fff;color:#101214;opacity:1;pointer-events:auto;transform:none;box-shadow:0 10px 28px rgba(0,0,0,.2)}
+.stage.banner-mode .call-control:disabled{opacity:.55}
+.stage.banner-mode .banner-more-button{border:1px solid rgba(255,255,255,.42);background:rgba(7,10,14,.28);color:#fff;pointer-events:auto;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%);box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.stage.banner-mode .call-control:hover,.stage.banner-mode .banner-more-button:hover{transform:translateY(-2px)}
+.stage.banner-mode .banner-more-button:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.14)}
+@media(max-width:760px){.stage.banner-mode .video-controls{bottom:64px;gap:8px}.stage.banner-mode .call-control,.stage.banner-mode .banner-more-button{min-width:104px;height:44px;padding:0 19px;font-size:14px}}
 
 /* LiveTime feature replacing the former character upload section. */
 .realtime-feature{position:relative;z-index:1;width:calc(100% - clamp(48px,8.8vw,144px));max-width:1280px;margin:40px auto 112px;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.95fr);align-items:center;gap:clamp(42px,7vw,112px);scroll-margin-top:100px}
