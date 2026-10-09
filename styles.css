@@ -359,5 +359,5 @@ html[data-theme="light"] .case-card,html[data-theme="light"] .case-card-product{
 /* Align homepage headings and soften their weight. */
 .customer-cases>.section-intro,.pricing-section>.section-intro{text-align:left;margin-left:0;margin-right:0}
 .customer-cases>.section-intro p,.pricing-section>.section-intro p{margin-left:0;margin-right:0}
-.section-intro h2,.realtime-feature-copy h2,.recommendation-title h2,.recommendation-overlay h3{font-weight:500;text-align:left}
-.pricing-plan{font-weight:500;text-align:left}
+.section-intro h2,.realtime-feature-copy h2,.recommendation-title h2,.recommendation-overlay h3{font-weight:400;text-align:left}
+.pricing-plan{font-weight:400;text-align:left}
