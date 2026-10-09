@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Realita 虚拟主播生成与直播首页" />
     <title>Realita — 让每个想法，都有自己的主播</title>
-    <link rel="stylesheet" href="./styles.css?v=229" />
+    <link rel="stylesheet" href="./styles.css?v=230" />
   </head>
   <body>
     <div class="aurora-background" aria-hidden="true">
@@ -155,26 +155,35 @@
       <p class="recommendation-empty" id="recommendationEmpty" hidden>暂时没有匹配的人物，换个关键词试试。</p>
     </section>
 
-    <section class="creation-space" aria-labelledby="creationSpaceTitle">
-      <div class="creation-space-copy">
-        <span>CREATE YOUR REALITA</span>
-        <h2 id="creationSpaceTitle">角色生成</h2>
-        <p>上传一张喜欢的图片，快速创建属于你的虚拟主播。让独特的形象成为表达、陪伴与创意互动的新方式。</p>
-        <div class="creation-space-meta">
-          <span>本地安全处理</span>
-          <span>即时生成预览</span>
+    <section class="realtime-feature" id="video" aria-labelledby="realtimeFeatureTitle">
+      <div class="realtime-feature-copy">
+        <span class="realtime-feature-number">03 — LiveTime</span>
+        <h2 id="realtimeFeatureTitle">实时<br /><span>人工智能模型</span></h2>
+        <ul class="realtime-capabilities">
+          <li>实时交互</li>
+          <li>语音控制操作</li>
+          <li>全身运动</li>
+          <li>超高清</li>
+          <li>无限次会话</li>
+          <li>自然对话</li>
+          <li>视觉感知</li>
+        </ul>
+      </div>
+      <div class="realtime-persona-visual">
+        <span class="realtime-live"><i aria-hidden="true"></i>真人角色</span>
+        <video class="realtime-persona-video" autoplay muted loop playsinline preload="metadata" aria-label="真人角色实时交互演示视频">
+          <source src="https://valle.cf.vidy.chat/valle/valle/realtime-wuvEkMZePS9VGZ8i.mp4" type="video/mp4" />
+          您的浏览器不支持视频播放。
+        </video>
+        <div class="realtime-call-ui" aria-hidden="true">
+          <span class="realtime-call-timer">00:00</span>
+          <div class="realtime-call-bar">
+            <span class="realtime-call-button"><img src="https://valle.cf.vidy.chat/valle/valle/mic-C09Nu8w3xLXKiMMF.png" alt="" /></span>
+            <span class="realtime-call-button"><img src="https://valle.cf.vidy.chat/valle/valle/camera-ZhZt5VPvmXr6dvOf.png" alt="" /></span>
+            <span class="realtime-call-button realtime-call-end"><img src="https://valle.cf.vidy.chat/valle/valle/end-LILqW716vgUORald.png" alt="" /></span>
+          </div>
         </div>
       </div>
-      <label class="recommendation-upload-card creation-upload" id="recommendationUploadZone" for="recommendationUpload">
-        <input id="recommendationUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
-        <span class="recommendation-upload-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
-        </span>
-        <strong>上传图片，创建你的形象</strong>
-        <small>点击或拖拽上传<br />JPG、PNG、WEBP · 最大 10MB</small>
-        <span class="recommendation-upload-action">选择图片</span>
-        <span class="recommendation-upload-feedback" id="recommendationUploadFeedback" aria-live="polite"></span>
-      </label>
     </section>
 
     <section class="customer-cases" aria-labelledby="caseTitle">
@@ -295,6 +304,6 @@
       <iframe class="call-embed" id="callEmbed" title="Realita 视频通话" allow="autoplay; camera; microphone"></iframe>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./app.js?v=61"></script>
+    <script src="./app.js?v=62"></script>
   </body>
 </html>

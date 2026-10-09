@@ -14,9 +14,6 @@ const performanceControls = [...document.querySelectorAll('.performance-control'
 const bannerAvatarButtons = [...document.querySelectorAll('.banner-avatar-button')];
 const recommendationGrid = document.querySelector('#recommendationGrid');
 const recommendationEmpty = document.querySelector('#recommendationEmpty');
-const recommendationUpload = document.querySelector('#recommendationUpload');
-const recommendationUploadZone = document.querySelector('#recommendationUploadZone');
-const recommendationUploadFeedback = document.querySelector('#recommendationUploadFeedback');
 const callFlow = document.querySelector('#callFlow');
 const callEmbed = document.querySelector('#callEmbed');
 const dialAvatar = document.querySelector('#dialAvatar');
@@ -480,78 +477,6 @@ document.querySelectorAll('.recommendation-favorite').forEach(bindFavoriteButton
 document.querySelectorAll('.recommendation-chat-button').forEach((button) => {
   updateRecommendationChatButton(button);
   bindRecommendationCall(button);
-});
-
-function setUploadFeedback(message, isError = false) {
-  recommendationUploadFeedback.textContent = message;
-  recommendationUploadFeedback.classList.toggle('error', isError);
-}
-
-function useRecommendationImage(file) {
-  if (!file) return;
-  const supportedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-  if (!supportedTypes.includes(file.type)) {
-    setUploadFeedback('请选择 JPG、PNG 或 WEBP 图片', true);
-    return;
-  }
-  if (file.size > 10 * 1024 * 1024) {
-    setUploadFeedback('图片不能超过 10MB', true);
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.addEventListener('load', () => {
-    let customCard = document.querySelector('.custom-recommendation');
-    if (!customCard) {
-      customCard = document.createElement('article');
-      customCard.className = 'recommendation-card custom-recommendation';
-      customCard.dataset.category = 'custom';
-      customCard.dataset.role = '自定义主播';
-      customCard.dataset.line = '你好，这是你创建的专属虚拟主播。';
-      customCard.innerHTML = `
-        <img alt="我的自定义虚拟人物" />
-        <div class="recommendation-overlay">
-          <span>自定义</span>
-          <div><h3>我的虚拟人物</h3><p>由本地图片创建</p></div>
-          <div class="recommendation-card-actions"><button class="recommendation-chat-button" type="button" aria-label="与我的虚拟人物通话">通话 <span class="recommendation-chat-icon" aria-hidden="true"><svg viewBox="0 0 28 27" fill="none"><path d="M10.0737.970093C5.28773 1.50158 1.50651 5.27763.969848 10.0636M10.0737 5.55176C7.78354 5.99661 5.99379 7.78764 5.54765 10.0778M14.3691 13.866C9.21067 19.0231 8.04045 13.0569 4.75605 16.3391 1.58965 19.5047-.231621 20.1389 3.78156 24.1497c.50252.4039 3.6953 5.2623 14.9158-5.9551C29.9193 6.97555 25.0635 3.77942 24.6596 3.27703 20.638-.744844 20.0134 1.08568 16.847 4.25128c-3.283 3.28356 2.6805 4.45765-2.4779 9.61472Z" stroke="currentColor" stroke-width="1.93975" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><button class="recommendation-favorite" type="button" aria-label="收藏我的虚拟人物">♡</button></div>
-        </div>`;
-      const displacedCard = recommendationGrid.querySelector('.recommendation-card:last-child');
-      if (displacedCard) displacedCard.hidden = true;
-      recommendationGrid.prepend(customCard);
-      bindFavoriteButton(customCard.querySelector('.recommendation-favorite'));
-      const chatButton = customCard.querySelector('.recommendation-chat-button');
-      updateRecommendationChatButton(chatButton);
-      bindRecommendationCall(chatButton);
-    }
-
-    customCard.dataset.title = `我的虚拟人物 ${file.name}`;
-    customCard.querySelector('img').src = reader.result;
-    setUploadFeedback(`已载入 ${file.name}`);
-    showToast('图片已添加到自定义虚拟人物');
-    recommendationUpload.value = '';
-  });
-  reader.addEventListener('error', () => setUploadFeedback('图片读取失败，请重新选择', true));
-  reader.readAsDataURL(file);
-}
-
-recommendationUpload.addEventListener('change', () => useRecommendationImage(recommendationUpload.files[0]));
-
-['dragenter', 'dragover'].forEach((type) => {
-  recommendationUploadZone.addEventListener(type, (event) => {
-    event.preventDefault();
-    recommendationUploadZone.classList.add('dragging');
-  });
-});
-
-['dragleave', 'drop'].forEach((type) => {
-  recommendationUploadZone.addEventListener(type, (event) => {
-    event.preventDefault();
-    recommendationUploadZone.classList.remove('dragging');
-  });
-});
-
-recommendationUploadZone.addEventListener('drop', (event) => {
-  useRecommendationImage(event.dataTransfer.files[0]);
 });
 
 video.play().then(() => stage.classList.add('video-playing')).catch(() => {});
