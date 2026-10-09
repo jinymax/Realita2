@@ -343,7 +343,8 @@ html[data-theme="light"] .case-card,html[data-theme="light"] .case-card-product{
 
 /* Keep the homepage experience action visible above the lower edge. */
 .stage.banner-mode .video-controls{bottom:76px;gap:12px;pointer-events:auto}
-.stage.banner-mode .call-control,.stage.banner-mode .banner-more-button{box-sizing:border-box;width:auto;min-width:120px;height:48px;display:flex;align-items:center;justify-content:center;padding:0 25px;border-radius:999px;font-size:16px;font-weight:600;line-height:1;text-decoration:none;letter-spacing:.01em;transition:transform .22s ease,background .22s ease,border-color .22s ease}
+.stage.banner-mode .call-control,.stage.banner-mode .banner-more-button{box-sizing:border-box;width:auto;min-width:120px;height:48px;display:flex;align-items:center;justify-content:center;padding:0 25px;border-radius:999px;font-size:14px;font-weight:400;line-height:1;text-decoration:none;letter-spacing:.01em;transition:transform .22s ease,background .22s ease,border-color .22s ease}
+.stage.banner-mode .call-control .control-label{font-size:14px;font-weight:400}
 .stage.banner-mode .call-control{border:1px solid rgba(255,255,255,.96);background:#fff;color:#101214;opacity:1;pointer-events:auto;transform:none;box-shadow:0 10px 28px rgba(0,0,0,.2)}
 .stage.banner-mode .call-control:disabled{opacity:.55}
 .stage.banner-mode .banner-more-button{border:1px solid rgba(255,255,255,.42);background:rgba(7,10,14,.28);color:#fff;pointer-events:auto;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%);box-shadow:0 10px 28px rgba(0,0,0,.14)}
