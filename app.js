@@ -211,6 +211,12 @@ bannerAvatarButtons.forEach((button) => {
   });
 });
 
+video.addEventListener('ended', () => {
+  if (mediaSwitching || connectedCallActive || !callFlow.hidden) return;
+  const nextIndex = (activeSlideIndex + 1) % bannerSlides.length;
+  selectSlide(nextIndex, 'forward');
+});
+
 performanceControls.forEach((button) => {
   button.addEventListener('click', () => {
     const groupSelector = button.dataset.action ? '[data-action]' : '[data-emotion]';
